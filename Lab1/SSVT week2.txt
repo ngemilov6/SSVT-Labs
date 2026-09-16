@@ -1,0 +1,29 @@
+Exercise 1:
+
+Design report: I have made a factorial function that calculate n! using recursion, where each step of recursion is: f(n) = n * f(n-1)
+
+
+Test report:
+I have tested two properties of factorials via quickcheck, these being:
+- factorial of zero is equal one
+- factorial grows slower than a double exponential function
+
+I have also tested whether the recursive implementation returns a value equal to a product of all integers (non-recursive).
+
+Time spent: ~36 minutes
+
+
+Exercise 2:
+
+Design report: I have made a function that recursively creates a powerset, by creating subsets by adding each list element to each different element via map().
+
+Test report:
+I have tested two properties of a powerset, testing that a powerset for a distinct list is also a distinct list, and testing the cardinality property.
+
+
+Answers to questions:
+The cardinality property is hard to test, as it is very computationally difficult, because of its exponential nature (for a list of just 20 elements we need to generate a powerset of over a million). This has led me to accidentally creating a memory overflow when testing. The tests have been limited to small list lengths (n <= 10).
+
+When performing these tests I am only testing one/multiple particular examples. It is quite impossible to truly test the mathematical fact for the entire domain, as it is infinite. However, as we can prove the cardinality property by induction, it is not necessary to test the ENTIRE domain, just enough test cases to feel that our implementation is sufficiently covered for edge-cases. To put it simply, we are only testing a small part/amount of cases of the function's specification.
+
+Time spent: ~115 minutes
