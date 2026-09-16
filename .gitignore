@@ -3,15 +3,15 @@
 *.o
 
 # Lab Executables
-Lab1/Ex1/Exercise1
-Lab1/Ex2/Exercise2
-Lab1/Ex3/Exercise3
-Lab1/Ex4/Exercise4
-Lab1/Ex5/Exercise5
-Lab1/Ex6/Exercise6
-Lab1/Ex7/Exercise7
-Lab1/Ex8/Exercise8
-Lab1/Ex9/Exercise9
-Lab1/Eu9/Euler9
-Lab1/Eu10/Euler10
-Lab1/Eu49/Euler49
+Lab1/Exercise1/Exercise1
+Lab1/Exercise2/Exercise2
+Lab1/Exercise3/Exercise3
+Lab1/Exercise4/Exercise4
+Lab1/Exercise5/Exercise5
+Lab1/Exercise6/Exercise6
+Lab1/Exercise7/Exercise7
+Lab1/Exercise8/Exercise8
+Lab1/Exercise9/Exercise9
+Lab1/Euler9/Euler9
+Lab1/Euler10/Euler10
+Lab1/Euler49/Euler49
