@@ -6,5 +6,7 @@ We have tested the function according to two properties of a powerset. We used p
 
 We have also tested whether a powerset of a distinct set is also distinct, via prop_powerSetNoDuplicates. By generating sets via sublistOf we can create distinct lists to be used as sets in our test. The property checks if the length of the generated powerset is equal to itself after being passed through nub (which removes all duplicates).
 
+Test report:
+
 When performing these tests we only tested one/multiple particular examples. It is quite impossible to truly test the mathematical fact for the entire domain, as it is infinite. However, as we can prove the cardinality property by induction, it is not necessary to test the ENTIRE domain, just enough test cases to feel that our implementation is sufficiently covered for edge-cases. To put it simply, we are only testing a small part/amount of cases of the function's specification, and we cannot say for sure if the function is proved to be 100% correct.
 
