@@ -1,0 +1,10 @@
+Time spent: 110 minutes
+
+Design report: We have implemented a function that recursively creates a powerset, by creating subsets by adding each list element to each different element via map(). The function returns an empty set if an empty set is passed to it (as the powerset of an empty set is an empty set).
+
+We have tested the function according to two properties of a powerset. We used prop_powerSetCardinality to test the cardinality property of the generated powersets, so that its cardinality (number of elements in the set) is always equal to 2^n, where n is the number of elements in the original set. This was difficult to test and was only tested partially, as generating examples of large powersets is very computation-intensive and memory-intensive due to the exponential growth of the powersets (for a list of just 20 elements we need to generate a powerset of over a million). For the quickcheck tests the size of the generated sets (from which later powersets are derived) was limited to size of n <= 10.
+
+We have also tested whether a powerset of a distinct set is also distinct, via prop_powerSetNoDuplicates. By generating sets via sublistOf we can create distinct lists to be used as sets in our test. The property checks if the length of the generated powerset is equal to itself after being passed through nub (which removes all duplicates).
+
+When performing these tests we only tested one/multiple particular examples. It is quite impossible to truly test the mathematical fact for the entire domain, as it is infinite. However, as we can prove the cardinality property by induction, it is not necessary to test the ENTIRE domain, just enough test cases to feel that our implementation is sufficiently covered for edge-cases. To put it simply, we are only testing a small part/amount of cases of the function's specification, and we cannot say for sure if the function is proved to be 100% correct.
+
