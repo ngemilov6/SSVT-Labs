@@ -9,15 +9,9 @@ import Lecture3
 
 import SetOrd
 
-type Name = Int
-data Form = Prop Name
-    | Neg Form
-    | Cnj [Form]
-    | Dsj [Form]
-    | Impl Form Form
-    | Equiv Form Form
-    -- Show for quickcheck to print counterexamples
-    deriving (Eq,Ord,Show)  
+-- run file with: 
+-- runghc --ghc-arg=-i.. Exercise8.hs +RTS -M512M -RTS
+
     
 
 sub :: Form -> Set Form
@@ -31,7 +25,7 @@ sub f@(Dsj fs) = foldl unionSet (Set [f]) (map sub fs)
 sub f@(Impl f1 f2) = unionSet ( unionSet (Set [f]) (sub f1)) (sub f2)
 sub f@(Equiv f1 f2) = unionSet ( unionSet (Set [f]) (sub f1)) (sub f2)
 
--- property to check if return from sub() contrains the original formula
+-- property to check if return from sub() contains the original formula
 prop_subInlcudesFormula :: Form -> Bool
 prop_subInlcudesFormula f = let Set fs = sub f in f `elem` fs
 
