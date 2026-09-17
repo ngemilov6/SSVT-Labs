@@ -26,7 +26,6 @@ For generating the test, several functions were implemented:
 
 
 Test Report:
-
 We assume that our helper functions and properties are well defined, and are testing only isPermutation.
 For generating the inputs, we used the generators gen_perms and gen_perm.
 In these generators, the input space is significantly reduced, as we are only testing integer values, whereas isPermutation is defined for all types.

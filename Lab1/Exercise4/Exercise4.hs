@@ -50,7 +50,7 @@ makePerm xs = do
 
 --- Generates a list of n random input numbers between 1 and and supplied maximum value
 genList :: Int -> Gen [Int]
-genList 0 _ = pure []
+genList 0 = pure []
 genList n = do
     ns <- makePerm [1..(n+10)]
     pure (take n ns)
