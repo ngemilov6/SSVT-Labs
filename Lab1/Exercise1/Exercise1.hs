@@ -1,3 +1,5 @@
+module Exercise1 where
+
 import Prelude
 import Test.QuickCheck ( quickCheck, NonNegative(NonNegative), Gen, Property, forAll, chooseInteger )
 import Text.Printf (errorBadArgument)
