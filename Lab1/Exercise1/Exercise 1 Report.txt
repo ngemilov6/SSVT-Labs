@@ -1,3 +1,5 @@
+Time Spent: 60min
+
 Design Report:
 We implemented the factorial function using recursion, with the base case n! = 1.
 Additonally, an error is thrown if the patterns for n>0 and n == 0 do not match, 
