@@ -11,12 +11,60 @@ The nsub() function recursively (via a helper-function defined inside) takes a p
 The implementation assumes sub() already outputs no duplicates.
 Once nsub has that set, it delegates to a local helper called countSet, defined in the where clause, whose job is to count recursively how many elements are in the list wrapped by Set. The base case matches Set [], an empty list, and returns 0, since there's nothing to count. The recursive case matches Set (_ : fs), which pattern-matches on a list with at least one element: it ignores the actual head element and recurses on the tail fs, wrapped back up as Set fs. Each recursive call adds 1 to the result, so effectively this goes down the list one element at a time, adding 1 for every element until it hits the empty list, at which point it stops and returns 0.
 
-For generating the inputs we use a custom generator, genForm, combined with quickchecks sized combinator via the Arbitrary Form instance. This generator builds random formulas out of Prop, Neg, Impl, and Equiv, with the size parameter controlling how deep the generated formula can be: Prop is always the base case, Neg reduces the size by one per recursive call, and Impl/Equiv split the remaining size in half across their two sub-formulas. This guarantees termination, since every recursive branch strictly shrinks the size parameter, and it means QuickCheck can generate increasingly large and complex formulas as testing progresses, rather than only small ones.
+For generating the inputs we use a custom generator, genForm, combined with quickchecks sized combinator via the Arbitrary Form instance. This generator builds random formulas out of Prop, Neg, Impl, and Equiv, with the size parameter controlling how deep the generated formula can be: Prop is always the base case, Neg reduces the size by one per recursive call, and Impl/Equiv split the remaining size in half across their two sub-formulas. This guarantees termination, since every recursive branch strictly shrinks the size parameter, and it means quickcheck can generate increasingly large and complex formulas as testing progresses, rather than only small ones.
 
 A notable limitation is that genForm never generates Cnj or Dsj (due to design decision, as they require a different structure that would be hard to generate/the implementation for was not clear to us), the n-ary conjunction and disjunction constructors, even though both sub and nsub are meant to support them. This means our generated inputs only cover a subset of the input domain, all formulas built from Prop, Neg, Impl, and Equiv, and none of our tests exercise the Cnj/Dsj cases at all.
 
 Answer to question 1:
-You can't get a mathematical proof of correctness purely from testing, no amount of quickcheck (which is inherently finine) equals a proof, but you can test properties that a correct sub function is logically required to satisfy, and that an incorrect implementation could violate. Instead, you can test the sub() function via properties that any correct notion of "subformula" must have, such as reflexivity, which is here tested with prop_subInlcudesFormula.
+You can't get a mathematical proof of correctness purely from testing, no amount of quickcheck (which is inherently finine) equals a proof.
+We can prove the correctness by induction on the complexity of the formula. For this, we assume that lower order
+functions are correct, such as unionSet, foldl, map, and the implementation of Set.
+
+Base Case: Prop x, we will call this complexity 0, as the fomula tree has depth 0.
+sub (Prop x) = Set [Prop x], which is correct as there is only one subformula for Prop x.
+
+Inductive Assumption:
+We assume that for all formulas of a complexity n, the sub implementation is correct.
+
+Inductive Step:
+We have to show if the implementation is correct for a formula of complexity n, 
+that it is also correct for one with complexity n+1.
+We have multiple options for the highest order operation in a formula, f, of complexity n+1.
+We will treat these separately:
+1. sub (Neg f)
+In this case the implementation produces: unionSet (Set [Neg f]) (sub f).
+We can see from the implementation of unionSet, that it merges the two sets in order, 
+while not allowing duplicates. The only subformulae that come from Neg f, are Neg f, and any subformulae from f.
+Using our IA, we know that sub correctly creates a set of subformulae for f, which is a formula of complexity n.
+Therefore, sub (Neg f) has the desired output and is correct.
+2. sub (Cnj fs)
+In this case the implementation produces: foldl unionSet (Set [f]) (map sub fs), where f = Cnj fs.
+What this does, is it starts with the set of the full formula { Cnj fs },
+and continuously merges in the set of subformulae for the next formula in fs.
+As the conjunction is at the highest level, the subformulae consist of Cnj fs, 
+as well as the sub formulae of each of the conjuncts. Using our IA, we know that (map sub fs) will correctly 
+produce the set of subformulae for all at most nth-order elements of fs.
+Therefore, this implementation is also correct.
+3. sub (Dsj fs)
+In this case the implementation produces: foldl unionSet (Set [f]) (map sub fs), where f = Dsj fs.
+Identical reasoning as in (2.) is used to obtain that the implementation in this case is also correct.
+4. sub (Impl f1 f2)
+In this case the implementation produces: unionSet ( unionSet (Set [f]) (sub f1)) (sub f2), where f= Impl f1 f2.
+The subformulae of the implication consist of the implication at large (Impl f1 f2),
+as well as all the subformulae of f1 and f2.
+the implementation merges the set of the large implication (f) with the subformulaes of f1 and f2, 
+which using IA we assume to be complete and correct. Applying unionSet between a unionSet call and another set 
+does not have any further implications, as it still simply merges the sets into each other while maintaining order.
+5. sub (Equiv f1 f2)
+In this case the implementation produces: unionSet ( unionSet (Set [f]) (sub f1)) (sub f2), where f= Impl f1 f2.
+Identical reasoning as in (4.) is used to obtain that the implementation in this case is also correct.
+
+These are all possible options for the top level operation of a formula of complexity n+1, thus we have shown that if the function
+is correct for a complexity n, then it is also correct for formulae of complexity n+1.
+in the base case, we have shown that it holds for n=0, therefore the function implementation is correct for all formulas
+of any complexity.
+
+You can also test properties that a correct sub function is logically required to satisfy, and that an incorrect implementation could violate. Instead, you can test the sub() function via properties that any correct notion of "subformula" must have, such as reflexivity, which is here tested with prop_subInlcudesFormula.
 
 Test report:
 For testing the sub and nsub functions, we do not have an independent reference implementation to compare against, so instead we test them against properties we expect any correct sub-formula computation to satisfy.
