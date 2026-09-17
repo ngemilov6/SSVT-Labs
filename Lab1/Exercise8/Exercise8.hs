@@ -57,6 +57,7 @@ sub f@(Dsj fs) = foldl unionSet (Set [f]) (map sub fs)
 sub f@(Impl f1 f2) = unionSet ( unionSet (Set [f]) (sub f1)) (sub f2)
 sub f@(Equiv f1 f2) = unionSet ( unionSet (Set [f]) (sub f1)) (sub f2)
 
+--- NEEDS REWORKING, NOT ELIMINATING DOUBLES
 nsub :: Form -> Int
 nsub (Prop x) = 1
 nsub (Neg f) = 1 + (nsub f)

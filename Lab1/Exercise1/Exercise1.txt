@@ -1,0 +1,13 @@
+Design Report:
+To implement the factorial function we used two different implementations.
+One utilizes a recursive definition where factorial n = n*(factorial (n-1)) and in the base case factorial 0 = 1.
+Another implementation uses foldl to continuously multiply the elements of [1..n] in
+factorial n = foldl (*) 1 [1..n].
+Both implementations return, what we think are, correct results.
+To generate the random numbers we used genSmallNat from the lecture notes.
+The properties implemented include a cross-check between the two implementations, 
+
+Test Report:
+In order to test the factorial function, used one definition of factorial as a reference
+to test the other. A limitation of this approach is that in this process we are assuming that our reference function is correct.
+On the other hand, testing a function using itself is also not fully sound, as a fault in the function could confirm faulty tests.

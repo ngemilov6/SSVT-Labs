@@ -2,12 +2,12 @@
 
 module Exercise7 where
 
-import Data.List
+import Data.List (tail)
 import System.Random
 import Test.QuickCheck
 -- import Lecture1
 -- import Lecture2
--- import Lecture3
+import Lecture3
 
 
 infix 1 -->
@@ -19,46 +19,46 @@ p --> q = (not p) || q
 
 
 --- Definitions from Lecture 3
-type Name = Int
+-- type Name = Int
 
 
-data Form
-  = Prop Name
-  | Neg Form
-  | Cnj [Form]
-  | Dsj [Form]
-  | Impl Form Form
-  | Equiv Form Form
-  deriving (Eq)
+-- data Form
+--   = Prop Name
+--   | Neg Form
+--   | Cnj [Form]
+--   | Dsj [Form]
+--   | Impl Form Form
+--   | Equiv Form Form
+--   deriving (Eq)
 
-instance Show Form where
-  show (Prop x) = show x
-  show (Neg f) = '-' : show f
-  show (Cnj fs) = "*(" ++ showLst fs ++ ")"
-  show (Dsj fs) = "+(" ++ showLst fs ++ ")"
-  show (Impl f1 f2) =
-    "(" ++ show f1 ++ "==>"
-      ++ show f2
-      ++ ")"
-  show (Equiv f1 f2) =
-    "(" ++ show f1 ++ "<=>"
-      ++ show f2
-      ++ ")"
+-- instance Show Form where
+--   show (Prop x) = show x
+--   show (Neg f) = '-' : show f
+--   show (Cnj fs) = "*(" ++ showLst fs ++ ")"
+--   show (Dsj fs) = "+(" ++ showLst fs ++ ")"
+--   show (Impl f1 f2) =
+--     "(" ++ show f1 ++ "==>"
+--       ++ show f2
+--       ++ ")"
+--   show (Equiv f1 f2) =
+--     "(" ++ show f1 ++ "<=>"
+--       ++ show f2
+--       ++ ")"
 
-showLst, showRest :: [Form] -> String
-showLst [] = ""
-showLst (f : fs) = show f ++ showRest fs
-showRest [] = ""
-showRest (f : fs) = ' ' : show f ++ showRest fs
+-- showLst, showRest :: [Form] -> String
+-- showLst [] = ""
+-- showLst (f : fs) = show f ++ showRest fs
+-- showRest [] = ""
+-- showRest (f : fs) = ' ' : show f ++ showRest fs
 
-nnf :: Form -> Form
-nnf (Prop x) = Prop x
-nnf (Neg (Prop x)) = Neg (Prop x)
-nnf (Neg (Neg f)) = nnf f
-nnf (Cnj fs) = Cnj (map nnf fs)
-nnf (Dsj fs) = Dsj (map nnf fs)
-nnf (Neg (Cnj fs)) = Dsj (map (nnf . Neg) fs)
-nnf (Neg (Dsj fs)) = Cnj (map (nnf . Neg) fs)
+-- nnf :: Form -> Form
+-- nnf (Prop x) = Prop x
+-- nnf (Neg (Prop x)) = Neg (Prop x)
+-- nnf (Neg (Neg f)) = nnf f
+-- nnf (Cnj fs) = Cnj (map nnf fs)
+-- nnf (Dsj fs) = Dsj (map nnf fs)
+-- nnf (Neg (Cnj fs)) = Dsj (map (nnf . Neg) fs)
+-- nnf (Neg (Dsj fs)) = Cnj (map (nnf . Neg) fs)
 ---
 --- ^^^^^ Definitions from Lecture 3
 
@@ -102,29 +102,29 @@ cleanCNF (Dsj xs) = foldr1 distributeOr (map cleanCNF xs)
 
 --- From Lecture 3
 ---
----
-propNames :: Form -> [Name]
-propNames = sort . nub . pnames
-  where
-    pnames (Prop name) = [name]
-    pnames (Neg f) = pnames f
-    pnames (Cnj fs) = concatMap pnames fs
-    pnames (Dsj fs) = concatMap pnames fs
-    pnames (Impl f1 f2) = concatMap pnames [f1, f2]
-    pnames (Equiv f1 f2) = concatMap pnames [f1, f2]
+-- ---
+-- propNames :: Form -> [Name]
+-- propNames = sort . nub . pnames
+--   where
+--     pnames (Prop name) = [name]
+--     pnames (Neg f) = pnames f
+--     pnames (Cnj fs) = concatMap pnames fs
+--     pnames (Dsj fs) = concatMap pnames fs
+--     pnames (Impl f1 f2) = concatMap pnames [f1, f2]
+--     pnames (Equiv f1 f2) = concatMap pnames [f1, f2]
 
-type Valuation = [(Name, Bool)]
+-- type Valuation = [(Name, Bool)]
 
 --- Generate a random number, adjusted from previous exercises and lecture material
 genSmallNat :: Int -> Int -> Gen Int
 genSmallNat a b = chooseInt (a, b)
 
--- | all possible valuations for lists of prop letters
-genVals :: [Name] -> [Valuation]
-genVals [] = [[]]
-genVals (name : names) =
-  map ((name, True) :) (genVals names)
-    ++ map ((name, False) :) (genVals names)
+-- -- | all possible valuations for lists of prop letters
+-- genVals :: [Name] -> [Valuation]
+-- genVals [] = [[]]
+-- genVals (name : names) =
+--   map ((name, True) :) (genVals names)
+--     ++ map ((name, False) :) (genVals names)
 
 genRanVal :: [Valuation] -> Gen Valuation
 genRanVal valuations = do
@@ -132,16 +132,16 @@ genRanVal valuations = do
   return (valuations !! k)
 
 
-evl :: Valuation -> Form -> Bool
-evl [] (Prop c) = error ("no info: " ++ show c)
-evl ((i, b) : xs) (Prop c)
-  | c == i = b
-  | otherwise = evl xs (Prop c)
-evl xs (Neg f) = not (evl xs f)
-evl xs (Cnj fs) = all (evl xs) fs
-evl xs (Dsj fs) = any (evl xs) fs
-evl xs (Impl f1 f2) = evl xs f1 --> evl xs f2
-evl xs (Equiv f1 f2) = evl xs f1 == evl xs f2
+-- evl :: Valuation -> Form -> Bool
+-- evl [] (Prop c) = error ("no info: " ++ show c)
+-- evl ((i, b) : xs) (Prop c)
+--   | c == i = b
+--   | otherwise = evl xs (Prop c)
+-- evl xs (Neg f) = not (evl xs f)
+-- evl xs (Cnj fs) = all (evl xs) fs
+-- evl xs (Dsj fs) = any (evl xs) fs
+-- evl xs (Impl f1 f2) = evl xs f1 --> evl xs f2
+-- evl xs (Equiv f1 f2) = evl xs f1 == evl xs f2
 
 checkEval :: Form -> Form -> Gen Bool
 checkEval form cnf = do
