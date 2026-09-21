@@ -1,0 +1,16 @@
+Time spent: 120 min
+
+Design report:
+We implemented a converter from logical formulas to Conjunctive Normal Form (CNF). 
+It starts by eliminating implications and bi-implications using the arrowfree function from lecture 3
+Then we use the recursive function nnf to convert the formula to Negation Normal Form (NNF).
+To obtain the CNF, we recursively process the formula, find the CNF of subformulas of conjunctions, and merge conjunctions at the same level.
+For disjunctions, we distribute the disjunction through all its terms recursively, for which we created the function dist.
+We use foldl, so we only need to go through the list once and trigger follow-up recursions where necessary.
+In dist, using pattern matching, we check whether the terms are conjunctions or disjunctions, and apply the appropriate distribution rules.
+
+Test report:
+For testing, we used generators from previous exercises and Lecture 3 to generate valuations,
+pick a random one, and evaluate a formula and its CNF to check whether the results match.
+For this, we compiled a list of five examples that aim to test different cases of implications,
+conjunctions at the same level, stacked conjunction/disjunctions, and single properties in conjunction/disjunction with more conjunctions/disjunctions.
