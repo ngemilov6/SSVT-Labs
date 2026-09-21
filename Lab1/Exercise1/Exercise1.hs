@@ -3,7 +3,6 @@ module Exercise1 where
 import Prelude
 import Test.QuickCheck ( quickCheck, NonNegative(NonNegative), Gen, Property, forAll, chooseInteger )
 import Text.Printf (errorBadArgument)
-import Criterion.Main ---Additional import for Benchmarking
 
 infix 1 -->
 (-->) :: Bool -> Bool -> Bool
@@ -59,12 +58,6 @@ main = do
     quickCheck prop_factorial_matches_reference_1
     quickCheck prop_factorial_matches_reference_2
 
-    putStrLn "\nRunning Benchmarks"
-    defaultMain [
-      bgroup "Factorial of 1000" [
-        bench "Recursive factorial" $ whnf factorial 1000,
-        bench "Fold factorial"  $ whnf factorialReference 1000
-        ]]
     input <- getLine
     let n = read input :: Integer
     putStrLn ((show n) ++ "! = " ++ show (factorial n))

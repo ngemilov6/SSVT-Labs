@@ -1,3 +1,4 @@
+Exercise 1
 Time Spent: 60min
 
 Design Report:
@@ -7,32 +8,35 @@ as negative inputs are not accepted for the factorial function.
 
 For testing the function we had two approaches:
 1. Testing using the function itself and seeing if it satisfies expected behaviour.
-prop_factorialPositive, prop_factorialRecursive, and prop_factorialIncreasing are properties chosen to test critical properties of the function.
-They test whether the result is always >=1, whether successive values of factorial n and (n+1) have a factor of (n+1),
-and whether factorial n < factorial n+1, for n>0.
-For all of these properties the factorial definition is itself used to test whether a property holds.
-2. Testing using a reference function
-We defined factorialReference using foldr with multiplication on a list [1..n] with starting value 1.
-This also generates the factorial correctly.
-prop_factorial_matches_reference_1 and prop_factorial_matches_reference_2 both use a cross reference to see whether for a random n
-the value factorial gives matches the reference function.
-This verifies the property using an independent function, which is a great attribute in testing.
-However, a downside to this approach is that we must be certain that the reference function is correct, which we are not verifying in this exercise.
-There is a tradeoff between independent verification and self-confirmation which can be seen with the problems we encountered.
-
-<<BENCHMARKING REPORT>>
+The properties prop_factorialPositive, prop_factorialRecursive, and prop_factorialIncreasing
+are chosen to test critical properties of the function. They test whether the 
+result is always >=1, whether successive values of factorial n and (n+1) have a factor 
+of (n+1), and whether factorial n < factorial n+1, for n>0. For all of these properties
+the factorial definition is itself used to test whether a property holds.
+2. Testing using a reference function.
+We defined factorialReference using foldr with multiplication on a list [1..n] with 
+starting value 1. This also generates the factorial correctly. The properties 
+prop_factorial_matches_reference_1 and prop_factorial_matches_reference_2 both 
+use a cross reference to see whether for a random n the value factorial gives 
+matches the reference function. This verifies the property using an independent function, 
+which is a great attribute in testing. However, a downside to this approach is that we 
+must be certain that the reference function is correct, which we are not verifying in 
+this exercise. There is a tradeoff between independent verification and self-confirmation 
+which can be seen with the problems we encountered.
 
 Test Report:
-
 For testing the function, we assume that the reference function is correct.
-For generating the inputs we use the supplied function genSmallNat, generating natural numbers between 0 and 20.
-For the last property to test the equivalence, we also use a QuickCheck arbitrary generator for NonNegative integers. 
-This includes only valid inputs, but only covers a very small proportion of the input domain, all natural numbers.
-In terms of the function the tests cover different properties, some of which are overlapping. For example,
-prop_factorialIncreasing directly follows from prop_factorialRecursive for n>0, and prop_factorialPositive 
-also follows from prop_factorialIncreasing for n>0.
-Similarly, the two reference properties test for the same equivalence between the factorial function and the reference function.
-The first generates the inputs using our custom generator, the second uses the QuickCheck NonNegative arbitrary generator without a hard bound.
-The second allows for a wider coverage of the input domain, however, we have less insights into the specific inputs without providing further arguments to QuickCheck.
-With all tests passing, we can conclude that for the small sample of input values, all expected properties are confirmed.
-However, we cannot conclude that the function is fully correct, as we have not performed fully exhaustive tests.
+For generating the inputs we use the supplied function genSmallNat, generating natural 
+numbers between 0 and 20. For the last property to test the equivalence, we also use a 
+QuickCheck arbitrary generator for NonNegative integers. This includes only valid inputs, 
+but only covers a very small proportion of the input domain, all natural numbers. In terms 
+of the function the tests cover different properties, some of which are overlapping. For example,
+prop_factorialIncreasing directly follows from prop_factorialRecursive for n>0, and 
+prop_factorialPositive also follows from prop_factorialIncreasing for n>0. Similarly, the two 
+reference properties test for the same equivalence between the factorial function and the 
+reference function. The first generates the inputs using our custom generator, the second uses 
+the QuickCheck NonNegative arbitrary generator without a hard bound. The second allows for a 
+wider coverage of the input domain, however, we have less insights into the specific inputs 
+without providing further arguments to QuickCheck. With all tests passing, we can conclude that 
+for the small sample of input values, all expected properties are confirmed. However, we cannot 
+conclude that the function is fully correct, as we have not performed fully exhaustive tests.

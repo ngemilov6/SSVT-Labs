@@ -1,0 +1,46 @@
+Exercise 6
+Time spent: 130 minutes
+
+Design Report:
+The assignment requires translating a natural language logic puzzle 
+into formal specifications using explicitly mandated programmatic 
+scaffolding, specifically the functions accuses, accusers, guilty, 
+and honest. During development, we evaluated two drastically different 
+architectural approaches. The alternative approach modeled a generalized 
+SAT-solver by constructing a custom Abstract Syntax Tree (AST) to 
+represent propositional formulas, ultimately evaluating all 1,024 possible 
+combinations of truth-tellers and thieves across the five boys. While 
+mathematically rigorous, we discarded this approach because it explicitly 
+bypassed the mandatory function signatures provided in the lab instructions 
+and vastly overcomplicated a computationally simple problem. Instead, we 
+chose an approach that perfectly conforms to the required scaffolding by 
+logically exploiting the puzzle's single degree of freedom. Because the premise 
+explicitly states that "One of them has stolen something", the state space 
+collapses; we only need to test five distinct hypotheses. The accuses function 
+evaluates whether a boy's statement is formally true under the strict assumption 
+that a specific boy, passed as the thief parameter, is the sole culprit. The 
+natural language statements were mapped to propositional logic as follows: 
+Matthew’s compound negative becomes a conjunction (thief /= Carl && thief /= Matthew); 
+Peter’s becomes a simple disjunction (thief == Matthew || thief == Jack); 
+Jack’s requires negating the evaluations of Matthew and Peter; Arnold’s exclusive-or 
+translates to a strict inequality between Matthew's and Peter's truth evaluations (/=); 
+and Carl’s is a direct negation of Arnold’s.   
+
+Test Report and Execution:
+The accusers function iterates over the list of boys to return the subset 
+whose statements hold true for a hypothesized thief. Because the teacher 
+established a rigid constraint that exactly three boys always tell the truth, 
+the guilty function iteratively tests each boy as the hypothesized thief and 
+filters for the candidate whose assumption yields an accusers list of exactly 
+length 3. A critical design consideration was how the program handles logical 
+ambiguity—such as a scenario where assuming two different boys as the thief 
+both result in exactly three truth-tellers. Because guilty utilizes a list 
+comprehension evaluating the entire domain of boys, it does not short-circuit 
+upon finding a first match; it exhaustively collects every valid candidate. 
+If the puzzle were logically flawed, the function would expose this by returning 
+an empty list or a list containing multiple boys. This mechanism perfectly tests 
+the assignment's assertion that "If the puzzle is well-designed, then guilty should 
+give a singleton list". When executed, the guilty function successfully computes a 
+singleton list containing [Jack], proving the puzzle's internal validity. The honest 
+function subsequently passes Jack into the accusers list, verifying that Matthew, 
+Peter, and Carl were the three honest individuals. 
