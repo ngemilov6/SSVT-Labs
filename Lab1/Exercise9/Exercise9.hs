@@ -12,9 +12,6 @@ infix 1 -->
 (-->) :: Bool -> Bool -> Bool
 p --> q = (not p) || q
 
-
-
-
 --- Infinite list of prime products as the products of slices from the start of primes
 prime_product :: [Integer]
 prime_product = [product (take n primes) | n<-[1..]]

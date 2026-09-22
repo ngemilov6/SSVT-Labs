@@ -3,8 +3,6 @@ module Exercise8 where
 import Data.List
 import System.Random
 import Test.QuickCheck
--- import Lecture1
--- import Lecture2
 import Lecture3
 
 import SetOrd
@@ -12,7 +10,6 @@ import SetOrd
 -- run file with: 
 -- runghc --ghc-arg=-i.. Exercise8.hs +RTS -M512M -RTS
 
-    
 
 sub :: Form -> Set Form
 sub (Prop x) = Set [Prop x]
