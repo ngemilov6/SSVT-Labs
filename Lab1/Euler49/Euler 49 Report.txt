@@ -1,0 +1,23 @@
+Euler Problem 49
+Time spent: 90 minutes
+
+Design Report: 
+The solution for Euler Problem 49 searches for arithmetic triples among the list
+of primes with the specified number of digits, which is 4 for the problem. 
+We take the list of primes and extract only those with 4 digits using primesOfLength.
+From there, we find arithmetic triples of the form (a, b, c) where a < b < c and 
+the arithmetic property 2*b - a = c holds. Additionally, a, b, and c need to be permutations
+of each other. This extracts exactly the two sets of three primes mentioned in the task.
+To provide the output as a 12-digit integer, we concatenate the string representations
+of the numbers using concatNumber.
+
+Test Report:
+As the task asks to extract a specific number, we test whether the extracted number
+has all the properties we were looking for.
+As we are given that there are only two such arithemtic sequences, we know we are not
+missing solutions. 
+We test whether they are permutations of each other, whether they are all primes, 
+and whether they form an arithmetic sequence.
+The numbers 2969, 6299, and 9629 satisfy all of these properties, and the tests confirm this.
+In order to test the answer, an additional function to split the number back into its
+individual parts was implemented.
