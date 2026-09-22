@@ -1,37 +1,49 @@
+Exercise 4
 Time Spent: 110min
 
 Design Report:
-We implemented isPermutation by testing a combination of two properties: that two lists have the same number of elements,
-and that all elements of one list are element of the other. Together these imply that the two lists have the same elements.
+We implemented isPermutation by testing a combination of two properties: that two 
+lists have the same number of elements, and that all elements of one list are 
+element of the other. Together these imply that the two lists have the same elements.
 
 We defined a number of properties for testing:
 - reflexivity: a list l1 is a permutation of itself
 - reverseability: the reverse of a list l1 is a permutation of l1
 - symmetry: if l1 is a permutation of l2, then l2 is also a permutation of l1
-- faulty permutation: if l1 and l2 are permutations of each other, and we change one element in l1, it is no longer a permutation of l2
+- faulty permutation: if l1 and l2 are permutations of each other, and we change 
+one element in l1, it is no longer a permutation of l2
 
 The last property uses a helper function, falsified, to change the first element of a list.
 For generating the test, several functions were implemented:
-- genSmallNat: Adjusted version of genSmallNat used in the lecture, taking two arguments as the bound of the random Int to be generated.
-- makePerm: Takes a list, or initial permutation, and generates a random permutation recursively. It does this by selecting a random element in the list,
-    extracting that element from the list by splitting it, then combining the rest back together. The selected element is then appended to the front
-    of the permutation of the rest. This approach allows for random permutations to be used in testing.
-- genList: Takes one argument n, the number of elements that should be in the list. It first computes a permutation of [1..(n+10)] using makePerm.
-    This is then cropped to only n elements. This process allows for a random selection of values within the bounds. 
-    10 as the number of additional values was chosen to simply fix a value that would allow for some variation.
-- gen_perms: Generates a legnth of the list, we limited it to between 3 and 10 to limit the resource demand during testing.
-    It the generates an initial permutation of that length using genList. Then a permutaion of that list is generated and both the initial and permutation are returned.
-    This is a very helpful generator for testing, as it generates a pair of lists that are permutations of each other, on which properties can be tested.
-- gen_perm: Similar to gen_perms, only that only one initial permutaiton is generated. This is used for testing reflexivity and reversability.
+- genSmallNat: Adjusted version of genSmallNat used in the lecture, taking two arguments as
+the bound of the random Int to be generated.
+- makePerm: Takes a list, or initial permutation, and generates a random permutation 
+recursively. It does this by selecting a random element in the list, extracting that element 
+from the list by splitting it, then combining the rest back together. The selected element
+is then appended to the front of the permutation of the rest. This approach allows for 
+random permutations to be used in testing.
+- genList: Takes one argument n, the number of elements that should be in the list. It first 
+computes a permutation of [1..(n+10)] using makePerm. This is then cropped to only n elements. 
+This process allows for a random selection of values within the bounds. 10 as the number of 
+additional values was chosen to simply fix a value that would allow for some variation.
+- gen_perms: Generates a legnth of the list, we limited it to between 3 and 10 to limit the 
+resource demand during testing. It the generates an initial permutation of that length using 
+genList. Then a permutaion of that list is generated and both the initial and permutation 
+are returned. This is a very helpful generator for testing, as it generates a pair of lists 
+that are permutations of each other, on which properties can be tested.
+- gen_perm: Similar to gen_perms, only that only one initial permutaiton is generated. This is 
+used for testing reflexivity and reversability.
 
 
 Test Report:
-We assume that our helper functions and properties are well defined, and are testing only isPermutation.
-For generating the inputs, we used the generators gen_perms and gen_perm.
-In these generators, the input space is significantly reduced, as we are only testing integer values, whereas isPermutation is defined for all types.
-We are also limiting the length of generated input lists to be at most 10, to keep the tests computationally cheap.
-Additionally, in genList, we only excerpts of permutations of [1..(n+10)], so the lists are not filled wit random values.
-We are, however, in this manner ensuring that no duplicates occur in the list.
-The tests cover different properties that the function must satisfy, whih are independent from each other.
-As we are not covering the full input space in our tests, we are also not perfectly testing isPermutation.
-We can conclude that for our space of possible generated inputs all properties hold, which gives us reason to believe they will also hold for the rest of the input domain.
+We assume that our helper functions and properties are well defined, and are testing only
+isPermutation. For generating the inputs, we used the generators gen_perms and gen_perm.
+In these generators, the input space is significantly reduced, as we are only testing integer 
+values, whereas isPermutation is defined for all types. We are also limiting the length of 
+generated input lists to be at most 10, to keep the tests computationally cheap. Additionally, 
+in genList, we only excerpts of permutations of [1..(n+10)], so the lists are not filled with
+random values. We are, however, in this manner ensuring that no duplicates occur in the list. 
+The tests cover different properties that the function must satisfy, whih are independent from 
+each other. As we are not covering the full input space in our tests, we are also not perfectly
+testing isPermutation. We can conclude that for our space of possible generated inputs all 
+properties hold, which gives us reason to believe they will also hold for the rest of the input domain.

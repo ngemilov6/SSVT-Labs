@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Time spent: 120 min
 
 Design report:
@@ -14,3 +15,42 @@ For testing, we used generators from previous exercises and Lecture 3 to generat
 pick a random one, and evaluate a formula and its CNF to check whether the results match.
 For this, we compiled a list of five examples that aim to test different cases of implications,
 conjunctions at the same level, stacked conjunction/disjunctions, and single properties in conjunction/disjunction with more conjunctions/disjunctions.
+=======
+Exercise 7
+Time spent: 120 minutes
+
+Design Report: 
+The assignment requires a Haskell program to convert propositional formulas
+into Conjunctive Normal Form (CNF) utilizing the custom Form data type from 
+Lecture 3. The implementation strictly follows the recommended 3-step structural 
+approach: eliminating implications, pushing negations inward to achieve Negation 
+Normal Form (NNF), and finally distributing disjunctions over conjunctions. The 
+first two steps leverage the arrowfree and nnf functions provided in the lecture 
+materials. The core CNF conversion occurs within the toCNF and dist functions. 
+toCNF recursively traverses the NNF formula, flattening conjunctions on the same 
+level via mergeCnj. The dist function performs the actual mathematical distribution 
+of disjunctions across conjunctions using list comprehensions ([dist f1 f2 | f1<- fs1, f2<-fs2]). 
+It also incorporates pattern matching cases to seamlessly merge nested disjunctions 
+into flat lists, keeping the resulting formula minimal and avoiding redundant layers 
+in the Abstract Syntax Tree.
+
+Test Report:
+To rigorously verify the logical correctness of the conversion, we developed a 
+hybrid testing suite combining automated random generation with targeted manual 
+examples. For the automated component, we defined a custom Arbitrary instance for 
+the Form data type to dynamically generate random syntax trees featuring 
+combinations of propositions, negations, conjunctions, disjunctions, implications, 
+and equivalences. To prevent stack overflow errors caused by hyperexponential tree 
+depth during generation, the generator safely caps the recursive depth parameter 
+at 6. To supplement this, we compiled a curated list of five fixed manual examples 
+specifically engineered to test edge cases such as stacked conjunctions on equal 
+levels, nested equivalences, and highly complex disjunction distributions. The primary 
+testable property, prop_cnf_equiv, takes both the randomly generated formulas and 
+the manual examples and verifies their logical equivalence against their computed 
+CNF counterparts. It accomplishes this by utilizing allVals to generate an exhaustive 
+truth table of all possible valuations for the original formula, and then proving that 
+both formulas evaluate identically across every single row of that truth table. This 
+dual testing process perfectly guarantees that our CNF transformation is structurally 
+sound across predictable edge cases and unpredictable random generation without altering 
+the underlying Boolean logic. 
+>>>>>>> origin/main
