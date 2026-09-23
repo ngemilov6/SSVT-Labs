@@ -1,0 +1,4 @@
+There is a difference, as there are different outcomes, depending on the order of operation.
+For relation R = {(1,2)}, in domain A = {1,2} the relation is already transitive, so it makes no change, and upon
+making it symmetric, it becomes {(1,2),(2,1)}. In reverse order, making the relation symmetric makes it {(1,2),(2,1)},
+and upon making it transitive AFTER, it becomes {(1,1),(1,2),(2,1),(2,2)}, thus making a difference.
