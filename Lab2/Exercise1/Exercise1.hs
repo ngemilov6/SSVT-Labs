@@ -5,6 +5,9 @@ import SetOrd
 import System.Random
 import Data.List
 
+-- run with:
+-- runghc --ghc-arg=-i.. Exercise1.hs +RTS -M512M -RTS
+
 -- Generator from scratch
 genSet :: Int -> IO (Set Int)
 genSet n = do
