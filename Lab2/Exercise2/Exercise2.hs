@@ -45,12 +45,12 @@ propDifferenceNonCummutative set1 set2 =
         setDifference set1 set2 /= setDifference set2 set1
 
 -- Property to test that the union of a set with itself is idempotent
-propIndempotentUnion :: Set Int -> Bool
-propIndempotentUnion set = setUnion set set == set
+propIdempotentUnion :: Set Int -> Bool
+propIdempotentUnion set = setUnion set set == set
 
 -- Property to test that the intersection of a set with itself is idempotent
-propIndempotentIntersection :: Set Int -> Bool
-propIndempotentIntersection set = setIntersection set set == set
+propIdempotentIntersection :: Set Int -> Bool
+propIdempotentIntersection set = setIntersection set set == set
 
 -- Property to test that the difference of a set with itself is empty
 propDifferenceSelf :: Set Int -> Bool
