@@ -1,0 +1,11 @@
+For this exercise we defined a function that finds a symmetric closure of a given relation.
+
+The symmetric closure of a relation is the smallest relation that contains the original relation and is symmetric.
+A relation is symmetric if whenever an element is related to another, the reverse relation also holds. In other words,
+for every pair (a, b) in the original relation, the symmetric closure also includes (b, a). This ensures that all 
+directed connections are made bidirectional while preserving the original pairs.
+
+The function symClos builds a symmetric closure of a given relation by taking the original relation (here implemented as a set of pairs),
+and adding the reverse of each pair, all in one step. 
+The implementation uses list2set to remove eventual duplicates, and convert the result to a set datatype.
+
