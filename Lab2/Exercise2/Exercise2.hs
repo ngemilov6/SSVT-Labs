@@ -59,22 +59,30 @@ propDifferenceSelf set =
 
 main ::  IO ()
 main = do
-    -- 100 random tests
+    -- TODO: Tests on two different domains?
+
+    -- 100 random tests using the same properties as the QuickCheck checks
     results <- replicateM 100 $ do
         set1 <- genSet 10
         set2 <- genSet 10
-        return $ setUnion set1 set2 == setUnion set2 set1
-            && setIntersection set1 set2 == setIntersection set2 set1
-            && setDifference set1 set2 /= setDifference set2 set1
-            && setUnion set1 set1 == set1
-            && setIntersection set1 set1 == set1
-            && setDifference set1 set1 == emptySet
+        let unionProp = propUnionCummutative set1 set2
+            intersectionProp = propIntersectionCummutative set1 set2
+            differenceProp = setDifference set1 set2 /= setDifference set2 set1
+            idempotentUnionProp = propIdempotentUnion set1
+            idempotentIntersectionProp = propIdempotentIntersection set1
+            differenceSelfProp = propDifferenceSelf set1
+        return $ unionProp
+            && intersectionProp
+            && differenceProp
+            && idempotentUnionProp
+            && idempotentIntersectionProp
+            && differenceSelfProp
     print ("Tests passed:" ++ show (and results))
 
     -- QuickCheck tests
     quickCheck propUnionCummutative
     quickCheck propIntersectionCummutative
     quickCheck propDifferenceNonCummutative
-    quickCheck propIndempotentUnion
-    quickCheck propIndempotentIntersection
+    quickCheck propIdempotentUnion
+    quickCheck propIdempotentIntersection
     quickCheck propDifferenceSelf
