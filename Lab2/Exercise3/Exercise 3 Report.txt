@@ -9,3 +9,5 @@ The function symClos builds a symmetric closure of a given relation by taking th
 and adding the reverse of each pair, all in one step. 
 The implementation uses list2set to remove eventual duplicates, and convert the result to a set datatype.
 
+As an example, for a relation R = {(1,2),(2,3)}
+The function produces R` = {(1,2),(2,1),(2,3),(3,2)}
