@@ -1,0 +1,25 @@
+Time spent: 120min
+
+Design Report:
+The transitive closure of a relation R is the smallest possible superset R'
+such that for every xRy and yRz in R, xRz is also in R.
+The implementation went along two paths, one was our first intuition, 
+which was to implement it using recursion.
+In every step of iteration using @@, we are essentially looking for paths one
+longer than previously through a network.
+In trClos, we implemented this with the stop condition that no new relations
+are added if paths of an additional length are considered. At each iteration,
+the list is sorted and doubles removed using sort & nub.
+The second implementation uses fix from the lecture.
+This implementation proceeds in a similar way, and stops when a fix point is reached.
+This is exactly the case when no additional relations are added using the @@ reflexively.
+In addition to these tests, we have implemented a quickcheck property to check that the
+two implementation return identical results.
+Both implementations yield the correct transitive closure, which we can argue in both directions.
+If the longest initial path that was now covered by a single relation was n, 
+if there is a shortest path between two nodes of n+1, then this would be included in the next step
+and the recursion would not have terminated. If there was one > n+1 then there would also be a node 
+with shortest path equal to n+1 on the way. Recursively all nodes up to that end node would be
+included in the transitive closure.
+It can also not be that too many elements are added, as duplicates are removed, and no additional
+elements can be added apart from those that follow the property of the transitive closure above.
