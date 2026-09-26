@@ -1,0 +1,30 @@
+Euler Problem 9
+Time spent: 75 minutes
+
+Design Report:
+The implementation of Euler Problem 9 is structured around a generalized helper 
+function, findTriplets, which abstracts the static target sum of 1000 into a 
+parameter to allow the underlying mathematical logic to be formally tested. The 
+list comprehension optimizes the computational search space by bounding a to a 
+maximum of one-third of the target, and b to half of the target. By algebraically 
+deriving c directly from the target sum (c = target - a - b) rather than iterating 
+through a third generative loop, the algorithm reduces a cubic time complexity 
+problem into a highly constrained quadratic one. It then efficiently filters the 
+remaining candidates through the Pythagorean theorem (a^2 + b^2 = c^2), with the 
+iteration bounds inherently satisfying the a < b < c requirement.
+
+Test Report: 
+To satisfy the strict documentation requirements for this bonus exercise, a fully 
+automated QuickCheck test suite was developed. Because randomly generated integers 
+overwhelmingly fail to form valid Pythagorean triplets, applying standard QuickCheck 
+implication filters to a generalized generator would trigger test abandonment due to 
+exceeding discard limits. To circumvent this, the genValidTripletSum generator 
+mathematically constructs guaranteed valid target sums by utilizing Euclid's formula 
+(a = m^2 - n^2, b = 2mn, c = m^2 + n^2). The test suite evaluates these valid targets 
+against three distinct QuickCheck properties: prop_validSum verifies that the 
+constituent tuple elements accurately reconstruct the generated target sum; 
+prop_validPythagorean asserts the geometric validity of the output; and 
+prop_strictOrdering ensures the elements adhere to the strict monotonic constraint 
+a < b < c. After validating the underlying logic across randomized valid inputs, the 
+function is applied to the specific target of 1000, successfully isolating the unique 
+triplet (200, 375, 425) and determining its final product.
