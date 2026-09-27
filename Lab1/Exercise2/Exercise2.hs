@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-import Prelude
-import Test.QuickCheck
-
-powerset :: [a] -> [[a]]
-powerset = buildSubsets [[]]
-  where
-    buildSubsets :: [[a]] -> [a] -> [[a]]
-    buildSubsets acc [] = acc
-    buildSubsets acc (x:xs) = buildSubsets (acc ++ map (\subset -> subset ++ [x]) acc) xs
-
-genSmallNat :: Gen Integer
-genSmallNat = chooseInteger (0, 15)
-
-prop_powerset_size :: Property
-prop_powerset_size = 
-    forAll genSmallNat (\n -> toInteger (length (powerset [1..n])) == 2 ^ n)
-
-main :: IO ()
-main = do
-    putStrLn "Testing Powerset Cardinality..."
-    quickCheck prop_powerset_size
-=======
 module Exercise2 where
 
 import Data.List
@@ -64,4 +41,3 @@ main = do
     quickCheck prop_powerSetNoDuplicates
     quickCheck prop_powerSetCardinality_1_to_n
     quickCheck prop_powerSetSoundness
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4

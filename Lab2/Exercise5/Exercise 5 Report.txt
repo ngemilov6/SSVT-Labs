@@ -1,0 +1,20 @@
+Exercise 5
+Time spent: 45 minutes
+
+Design Report:
+The trClos function calculates the transitive closure of a binary relation by 
+repeatedly applying relational composition until a mathematical fixed point is 
+reached. The implementation first defines a custom infix operator (@@) to compute 
+the composition of two relations, utilizing a list comprehension 
+[(x,z) | (x,y) <- r, (w,z) <- s, y==w] to find all chained paths and filtering out
+duplicates with nub.
+
+To compute the closure, the implementation abstracts the recursive logic by utilizing 
+the fixed-point combinator (fp) provided in the Lecture 4 materials. The fp function 
+takes a transformation lambda—(\r -> sort $ nub ((r @@ r) ++ r))—and repeatedly 
+applies it to the relation. This lambda composes the relation with itself to find new 
+transitive pairs, appends them to the existing relation, and ensures the output is a 
+deduplicated, canonically ordered set. The fp function automatically handles the 
+termination condition, halting execution exactly when an iteration produces no new 
+pairs (r == r'), mathematically guaranteeing that all transitive paths of any length 
+are completely resolved.

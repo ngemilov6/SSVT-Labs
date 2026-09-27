@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-euler9 :: Integer
-euler9 = head [ a * b * c | a <- [1..333], b <- [a+1..499], let c = 1000 - a - b , a^2 + b^2 == c^2 ]
-=======
 module Euler9 where
 
 import Test.QuickCheck
@@ -63,4 +59,3 @@ main = do
     let [(a, b, c)] = findTriplets 1000
     putStrLn $ "The triplet is: " ++ show (a, b, c)
     putStrLn $ "The product is: " ++ show (a * b * c)
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4

@@ -1,19 +1,12 @@
-<<<<<<< HEAD
-=======
 module Euler10 where
 
 import Test.QuickCheck
 
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4
 primes :: [Integer]
 primes = 2 : 3 : filter isPrime [5,7..]
   where
     isPrime n = foldr (\p r -> p*p > n || ((n `rem` p) /= 0 && r)) True primes
 
-<<<<<<< HEAD
-euler10 :: Integer
-euler10 = sum $ takeWhile (< 2000000) primes
-=======
 -- helper function to allow testing
 sumPrimesBelow :: Integer -> Integer
 sumPrimesBelow limit = sum $ takeWhile (< limit) primes
@@ -69,4 +62,3 @@ main = do
     
     putStrLn "\nEuler 10 Output (Sum of primes below 2,000,000):"
     print euler10
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4

@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 module Exercise6 where
 
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4
 import Prelude
 
 data Boy = Matthew | Peter | Jack | Arnold | Carl deriving (Eq, Show)
@@ -10,21 +7,6 @@ data Boy = Matthew | Peter | Jack | Arnold | Carl deriving (Eq, Show)
 boys :: [Boy]
 boys = [Matthew, Peter, Jack, Arnold, Carl]
 
-<<<<<<< HEAD
-accuses :: Boy -> Boy -> Bool
-accuses Matthew thief = thief /= Carl && thief /= Matthew
-accuses Peter thief = thief == Matthew || thief == Jack
-accuses Jack thief = not (accuses Matthew thief) && not (accuses Peter thief)
-accuses Arnold thief = accuses Matthew thief /= accuses Peter thief
-accuses Carl thief = not (accuses Arnold thief)
-
-accusers :: Boy -> [Boy]
-accusers thief = [b | b <- boys, accuses b thief]
-
-guilty :: [Boy]
-guilty = [thief | thief <- boys, length (accusers thief) == 3]
-
-=======
 -- accuses: encodes whether a boy's statement is True GIVEN a hypothesized thief.
 -- Matthew: "Carl didn't do it, and neither did I." -> thief is not Carl and not Matthew.
 -- Peter: "It was Matthew or it was Jack." -> thief is Matthew or Jack.
@@ -51,7 +33,6 @@ guilty = [thief | thief <- boys, length (accusers thief) == 3]
 
 -- honest: Computes the boys who made honest declarations.
 -- It evaluates the accusers function against the resolved guilty party.
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4
 honest :: [Boy]
 honest = concatMap accusers guilty
 

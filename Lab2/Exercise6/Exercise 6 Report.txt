@@ -1,0 +1,34 @@
+Exercise 6
+Time spent: 60 minutes
+
+Design Report:
+The test suite in Exercise 6 evaluates the symmetric and transitive closure functions 
+implemented in Exercises 3 and 5. By importing symClos, trClos, and the custom 
+composition operator (@@) directly from their respective modules, the testing logic 
+remains cleanly separated from the core algorithmic implementations. Helper 
+predicates (isSymmetric, isTransitive, and isSubset) were designed to translate the 
+mathematical definitions of closures into strict boolean checks that can be evaluated 
+automatically.
+
+Test Report and Property Strength:
+The automated test suite leverages QuickCheck to generate random binary relations 
+(lists of integer pairs) to comprehensively validate both closure functions against 
+three core mathematical axioms.
+
+For the symmetric closure, prop_symClos_isSymmetric ensures the output achieves 
+perfect symmetry, prop_symClos_containsOriginal confirms no original data is lost 
+(the superset rule), and prop_symClos_idempotent verifies that repeated applications 
+yield no further changes. For the transitive closure, the equivalent properties 
+(prop_trClos_isTransitive, prop_trClos_containsOriginal, and prop_trClos_idempotent) 
+validate transitivity, subset retention, and fixed-point termination.
+
+Regarding property strength, the "specific rule" properties (symmetry or transitivity) 
+and the "extensive" properties (superset retention) are strictly incomparable. An 
+implementation could trivially satisfy transitivity or symmetry by returning an empty
+list (which fails the superset requirement), or it could satisfy the superset 
+requirement by simply returning the original list unchanged (which fails transitivity 
+and symmetry). Therefore, neither property implies the other, and neither is stronger 
+or weaker; they must be evaluated conjunctively to prove the implementation is 
+correct. All automated QuickCheck runs passed successfully, confirming the 
+implementations satisfy the formal definitions of symmetric and transitive closures 
+within the tested domain.

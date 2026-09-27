@@ -1,3 +1,5 @@
+module Exercise3 where
+    
 import Data.List (nub, sort)
 
 type Rel a = [(a,a)]

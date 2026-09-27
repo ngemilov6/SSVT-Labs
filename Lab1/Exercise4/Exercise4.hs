@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-import Prelude
-import Data.List (nub)
-import Test.QuickCheck ( quickCheck )
-
-isPermutation :: Eq a => [a] -> [a] -> Bool
-isPermutation xs ys = length xs == length ys && all (`elem` ys) xs
-
-prop_reflexive :: [Int] -> Bool
-prop_reflexive xs = 
-    let uniqueXs = nub xs 
-    in isPermutation uniqueXs uniqueXs
-
-prop_reverse :: [Int] -> Bool
-prop_reverse xs = 
-    let uniqueXs = nub xs 
-    in isPermutation uniqueXs (reverse uniqueXs)
-
-prop_symmetric :: [Int] -> [Int] -> Bool
-prop_symmetric xs ys = 
-    let uniqueXs = nub xs
-        uniqueYs = nub ys
-    in isPermutation uniqueXs uniqueYs == isPermutation uniqueYs uniqueXs
-=======
 module Exercise4 where
 
 import Prelude
@@ -94,7 +70,6 @@ gen_perm = do
     length_perm <- genSmallNat 3 10
     init_perm <- genList length_perm
     pure init_perm
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4
 
 main :: IO ()
 main = do
@@ -107,9 +82,7 @@ main = do
     quickCheck prop_reverse
     
     putStrLn "3. Symmetry:"
-<<<<<<< HEAD
-    quickCheck prop_symmetric
-=======
+
     quickCheck prop_symmetric
 
     putStrLn "4. Faulty Permutation"
@@ -120,4 +93,3 @@ main = do
     -- print (isPermutation [1,2,3,4] [1,2,3,4])
     -- print (isPermutation [1,2,3,4] [1,2,4,3])
     -- print (isPermutation "abc" "acb")
->>>>>>> 8f3672db976597164759f33a44254c1934725ae4
