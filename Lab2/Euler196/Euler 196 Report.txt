@@ -1,0 +1,42 @@
+Euler 196
+Time spent: ?? minutes
+
+Design Report:
+Project Euler 196 asks for S(5678027) + S(7208785), where S(n) is the sum of all
+primes in row n of the triangle of positive integers that belong to a prime triplet.
+Three primes form a triplet if one of them has the other two as neighbours, where
+each number has up to eight neighbours in the rows directly above and below and on
+either side. The valAt function maps a (row, column) coordinate to its value with
+the closed formula r*(r-1)/2 + c, and neighbours returns the valid coordinates
+(r-1, c-1..c+1), (r, c-1), (r, c+1) and (r+1, c-1..c+1), filtered to stay inside
+the triangle (1 <= c <= r).
+
+A prime at (n,c) is part of a triplet if it is itself a centre (isCenter: at least
+two prime neighbours), or if one of its prime neighbours is a centre. Because a
+neighbour can lie in row n-1 or n+1, and its own neighbours in row n-2 or n+2, only
+rows n-2 to n+2 ever need primality information. The first naive approach, trial
+division against a lazy list of primes, is far too slow for values around 2.6e13
+and millions of numbers per row. Instead, s builds a segmented sieve (sieveRange)
+over exactly the value range of those five rows, stored in an unboxed ST array. The
+sieve is seeded with the primes up to sqrt(hi), which are obtained by recursively
+applying the same sieve to [2..sqrt(hi)]. A base case in smallPrimes (m < 2 = [])
+is required to terminate this recursion; without it the program loops forever on
+sieveRange 2 2, which initially made the program appear "extremely slow". Every
+primality lookup (isP) is then a constant-time array access, and the whole answer
+is computed in under one second.
+
+Test Report:
+The implementation is validated with QuickCheck using three properties.
+prop_validNeighbourBounds checks that every generated neighbour lies within the
+triangle (1 <= c <= r). prop_neighbourSymmetry checks that the neighbour relation
+is symmetric: if A is a neighbour of B then B is a neighbour of A. This property
+exposed a bug in an earlier version, which used (r+1, c), (r+1, c+1), (r+1, c+2)
+for the row below instead of (r+1, c-1), (r+1, c), (r+1, c+1). Finally,
+prop_eulerBaseCases checks S(8) = 60, S(9) = 37 and S(10000) = 950007619, the
+values given in the problem description, which ties the geometry, the sieve and the
+triplet logic together against known answers.
+
+Both random properties use a precondition (c <= r ==>), so QuickCheck discards the
+generated coordinates that fall outside the triangle; the tests still pass 100
+valid cases each. All three properties passed, and the program outputs
+S(5678027) + S(7208785) = 322303240771079935.
