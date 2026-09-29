@@ -39,40 +39,35 @@ data Statement
 ---
 ---
 
--- Helper for creating n spaces
+--- Helper for creating n spaces
 indent :: Int -> String
 indent n = replicate n ' '
 
---- Expressions don't need indentation
-showExpr :: Expr -> String
-showExpr (I int) = show int
-showExpr (V var) = show var
-showExpr (Add expr1 expr2) = "(" ++ showExpr expr1 ++ " + " ++ showExpr expr2 ++ ")"
-showExpr (Subtr expr1 expr2) = "(" ++ showExpr expr1 ++ " - " ++ showExpr expr2 ++ ")"
-showExpr (Mult expr1 expr2) = "(" ++ showExpr expr1 ++ " * " ++ showExpr expr2 ++ ")"
-
+--- Show Expression, using +, -, *
 instance Show Expr where
-    show expr = showExpr expr
+    show (I int) = show int
+    show (V var) = show var
+    show (Add expr1 expr2) = "(" ++ show expr1 ++ " + " ++ show expr2 ++ ")"
+    show (Subtr expr1 expr2) = "(" ++ show expr1 ++ " - " ++ show expr2 ++ ")"
+    show (Mult expr1 expr2) = "(" ++ show expr1 ++ " * " ++ show expr2 ++ ")"
 
---- Show Conditions, also no indentation necessary
+--- Show Conditions
 --- shows symbols (==, <, >, ~, ^, v) rather than Eq, Lt, Gt, Ng, Cj, Dj
-showCondition :: Condition -> String
-showCondition (Prp var) = show var
-showCondition (Eq expr1 expr2) = "(" ++ showExpr expr1 ++ " == " ++ showExpr expr2 ++ ")"
-showCondition (Lt expr1 expr2) = "(" ++ showExpr expr1 ++ " < " ++ showExpr expr2 ++ ")"
-showCondition (Gt expr1 expr2) = "(" ++ showExpr expr1 ++ " > " ++ showExpr expr2 ++ ")"
-showCondition (Ng condition) = "(~" ++ showCondition condition ++ ")"
-showCondition (Cj []) = "true"
-showCondition (Cj [condition]) = showCondition condition
-showCondition (Cj (condition : conditions)) =
-    showCondition condition ++ " ^ " ++ showCondition (Cj conditions)
-showCondition (Dj []) = "false"
-showCondition (Dj [condition]) = showCondition condition
-showCondition (Dj (condition : conditions)) =
-    showCondition condition ++ " v " ++ showCondition (Dj conditions)
-
 instance Show Condition where
-    show condition = showCondition condition
+    show (Prp var) = show var
+    show (Eq expr1 expr2) = "(" ++ show expr1 ++ " == " ++ show expr2 ++ ")"
+    show (Lt expr1 expr2) = "(" ++ show expr1 ++ " < " ++ show expr2 ++ ")"
+    show (Gt expr1 expr2) = "(" ++ show expr1 ++ " > " ++ show expr2 ++ ")"
+    show (Ng condition) = "(~" ++ show condition ++ ")"
+    show (Cj []) = "true"
+    show (Cj [condition]) = show condition
+    show (Cj (condition : conditions)) =
+        show condition ++ " ^ " ++ show (Cj conditions)
+    show (Dj []) = "false"
+    show (Dj [condition]) = show condition
+    show (Dj (condition : conditions)) =
+        show condition ++ " v " ++ show (Dj conditions)
+
 
 
 --- Show statements, which requires indentation, for conditions and while statements.
@@ -80,18 +75,18 @@ instance Show Condition where
 --- Steps of 4 spaces are used for indentation
 showIndentStatement :: Statement -> Int -> String
 showIndentStatement (Ass var expr) n =
-    indent n ++ show var ++ " <-- " ++ showExpr expr ++ ";\n"
+    indent n ++ show var ++ " <-- " ++ show expr ++ ";\n"
 showIndentStatement (Seq statements) n = concatMap (`showIndentStatement` n) statements
 showIndentStatement (Cond condition thenBranch elseBranch) n =
     indent n
-        ++ "if " ++ showCondition condition
+        ++ "if " ++ show condition
         ++ " then {\n" ++ showIndentStatement thenBranch (n + 4)
         ++ indent n
         ++ "} else {\n" ++ showIndentStatement elseBranch (n + 4)
         ++ indent n ++ "}\n"
 showIndentStatement (While condition body) n =
     indent n
-        ++ "while (" ++ showCondition condition ++ ") do {\n"
+        ++ "while (" ++ show condition ++ ") do {\n"
         ++ showIndentStatement body (n + 4)
         ++ indent n ++ "}\n"
 
@@ -109,26 +104,26 @@ instance Show Statement where
 data Token
     = TokenVar Var
     | TokenInt Integer
-    | TokenAssign              -- <--
-    | TokenPlus                -- +
-    | TokenMinus               -- -
-    | TokenMult                -- *
-    | TokenEq                  -- ==
-    | TokenLt                  -- <
-    | TokenGt                  -- >
-    | TokenNeg                 -- ~
-    | TokenCnj                 -- ^
-    | TokenDsj                 -- v
+    | TokenAssign              --- <--
+    | TokenPlus                --- +
+    | TokenMinus               --- -
+    | TokenMult                --- *
+    | TokenEq                  --- ==
+    | TokenLt                  --- <
+    | TokenGt                  --- >
+    | TokenNeg                 --- ~
+    | TokenCnj                 --- ^
+    | TokenDsj                 --- v
     | TokenIf
     | TokenThen
     | TokenElse
     | TokenWhile
     | TokenDo
-    | TokenOP                  -- (
-    | TokenCP                  -- )
-    | TokenOB                  -- {
-    | TokenCB                  -- }
-    | TokenSemi                -- ;
+    | TokenOP                  --- (
+    | TokenCP                  --- )
+    | TokenOB                  --- {
+    | TokenCB                  --- }
+    | TokenSemi                --- ;
     deriving (Show, Eq)
 
 --- Lexer to read tokens from a string recursively
@@ -195,11 +190,6 @@ type Parser a b = [a] -> [(b, [a])]
 --- Always succeeds without consuming any tokens. Used if empty and at the end of blocks, when consuming }
 succeed :: b -> Parser a b
 succeed value tokens = [(value, tokens)]
-
-
--- =====================================================================
--- Variables
--- =====================================================================
 
 --- EXPRESSION PARSER
 
