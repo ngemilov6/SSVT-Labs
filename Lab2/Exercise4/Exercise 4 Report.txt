@@ -1,0 +1,45 @@
+Time Spent: 120min
+
+1. The function isSerial accepts the domain and a relation and returns a Bool
+of whether the relation is serial or not.
+A helper function hasRelation is implemented to check for a single element whether it has a relation.
+isSerial is then implemented by using the logic that for all elements in the domain,
+there must be a relation starting at that element and going to another element in the domain. Additionally,
+all elements in the relation must be part of the domain.
+The quantifier combination of all and any ensures that if the domain is empty, the relation is serial by default,
+if the relation is empty, when the domain is not, the relation is not serial.
+
+2. The properties that were implemented as tests using quickCheck are:
+    a.  prop_domain, to check that all generated relations are in the domain
+    b.  prop_notInDomain, to check that if an element outside of the domain is added, isInDomain correctly
+        identifies this. So this test and (a.) are not directly for isSerial.
+    c.  prop_identitiesSerial, tests that if reflexive relations are added, the outcoming relation should
+        be serial.
+    d.  prop_isolatedNotSerial, tests whether a relation that has reflexive relations for all elements except
+        for a specific isolated element is correclty identified as not being serial.
+For this we used two generator functions:
+    a.  genRelFromDomain, which takes a domain and returns a list of tuples as relations from that domain.
+    b.  genDomainRel, which first generates an arbitrary domain, then generates a relation using the generator above,
+        and returns the combination of the domain and relation.
+The generator covers a part of the domain and relation, limiting the type to Integers.
+The properties that are tested, test whether the function correctly identifies serial and non-serial relations,
+as well as edge cases.
+It does, however, not perfectly test the full domain of isSerial and thus cannot fully prove functionality.
+
+3.
+Whether or not the relation is serial depends fully on the domain.
+If the domain is the natural numbers, the relation is always serial, 
+as the calculation y(mod n) is always well defined for any positive integers y and n.
+If the domain includes the set [0..n-1], the realtion is also always serial,
+as that covers the full range of (mod n). 
+However, if neither of these are given, the realtion can become non-serial.
+For instance, on the domain [0,3,6] with n=3, the relation remains serial, 
+as the entire domain is 0(mod 3) and 0 is in the domain.
+For domain = [10] and n=5, this is not the case as 10 = 0(mod5) but 0 is not in the domain.
+For a specific given domain D, and positive integer n, we can prove that a relation 
+is serial by computing that d(mod n) is in D, for all d in D.
+We can test whether R is serial by using the function we defined for the specific domain,
+and full relation set.
+This is done using modulo_relation to generate the relation for a given domain and fixed n.
+We have also included a quickCheck property to test whether our claim is true,
+that if [0..(n-1)] is included in the domain a relation is always serial.
