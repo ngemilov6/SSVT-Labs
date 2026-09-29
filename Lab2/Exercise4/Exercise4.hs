@@ -1,24 +1,10 @@
 module Exercise4 where
 
-<<<<<<< HEAD
-import SetOrd
-import System.Random
-=======
 import Data.List
->>>>>>> ed68974973bb76b622917150b9706beb21100f3b
 import Test.QuickCheck
 
 type Rel a = [(a,a)]
 
-<<<<<<< HEAD
-listTuplestoList :: [(a,b)] -> [a]
-listTuplestoList [] = []
-listTuplestoList ((x,_):xs) = x : listTuplestoList xs
-
-
-isSerial :: Eq a => [a] -> Rel a -> Bool
-isSerial xs rel = all (\x -> elem x (listTuplestoList rel)) xs
-=======
 --- checks whether an element of the domain has a relation
 hasRelation :: Eq a => [a] -> Rel a -> a -> Bool
 hasRelation domain rel n = any (\(x,y) -> x == n && elem y domain) rel
@@ -113,4 +99,3 @@ main = do
     print (isSerial [10] (modulo_relation [10] 5))
     print (isSerial [0,3,6] (modulo_relation [0,3,6] 3))
     quickCheck prop_modDomainN
->>>>>>> ed68974973bb76b622917150b9706beb21100f3b

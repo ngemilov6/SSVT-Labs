@@ -21,8 +21,8 @@ termination condition, halting execution exactly when an iteration produces no n
 pairs (r == r'), mathematically guaranteeing that all transitive paths of any length 
 are completely resolved.
 
-Essentially, the trClos and trClos2 functions utilize the same underlying
-implementation. Because the fp combinator is defined strictly as a wrapper around
+Essentially, the trClos and trClos2 functions utilize the same
+implementation. Because the fp combinator is defined as a wrapper around
 Haskell's built-in until function (fp f = until (\x -> x == f x) f), both approaches
 rely on an until loop and apply the same relational composition step. The key
 distinction lies in the termination condition. The trClos2 function explicitly

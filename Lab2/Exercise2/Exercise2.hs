@@ -1,20 +1,5 @@
 module Exercise2 where
 
-<<<<<<< HEAD
-import SetOrd
-import System.Random
-import Test.QuickCheck
-import Data.List
-
-setIntersection :: Ord a => Set a -> Set a -> Set a
-setIntersection (Set xs) (Set ys) = list2set [x | x <- xs, x `elem` ys]
-
-setUnion :: Ord a => Set a -> Set a -> Set a
-setUnion (Set xs) (Set ys) = list2set (xs ++ ys)
-
-setDifference :: Ord a => Set a -> Set a -> Set a
-setDifference (Set xs) (Set ys) = list2set [x | x <- xs, not (x `elem` ys)]
-=======
 import Test.QuickCheck
 import SetOrd
 import Exercise1 (genSet, genSetQuickCheck)
@@ -101,4 +86,3 @@ main = do
     quickCheck propIdempotentUnion
     quickCheck propIdempotentIntersection
     quickCheck propDifferenceSelf
->>>>>>> ed68974973bb76b622917150b9706beb21100f3b
