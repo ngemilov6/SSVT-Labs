@@ -29,7 +29,6 @@ factorialReference n
 genSmallNat :: Gen Integer
 genSmallNat = chooseInteger (0, 20)
 
---- Properties using only factorial function itself to self-confirm
 prop_factorialPositive :: Property
 prop_factorialPositive = 
     forAll genSmallNat (\n -> factorial n >= 1)

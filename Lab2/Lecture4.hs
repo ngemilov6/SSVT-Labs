@@ -1,7 +1,4 @@
-
-module Lecture4
-
-where 
+module Lecture4 where 
 
 import Data.List
 import Data.Char

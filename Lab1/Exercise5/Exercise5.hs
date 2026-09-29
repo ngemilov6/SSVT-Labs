@@ -120,6 +120,7 @@ main = do
     
     putStrLn "2. Testing symmetry..."
     quickCheck prop_derangement_symmetric
+
     quickCheck prop_derangement_symmetric_manual
 
     putStrLn "3. Testing no fixed points implication..."

@@ -82,6 +82,7 @@ main = do
     quickCheck prop_reverse
     
     putStrLn "3. Symmetry:"
+
     quickCheck prop_symmetric
 
     putStrLn "4. Faulty Permutation"

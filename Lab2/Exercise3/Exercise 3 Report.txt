@@ -1,0 +1,19 @@
+Exercise 3
+Time spent: 30 minutes
+
+Design Report:
+The symmetric closure of a binary relation R on a set X is 
+the smallest symmetric relation that contains R.
+The symClos function evaluates the symmetric closure of a binary relation,
+which is represented as an ordered list of pairs. The implementation ensures 
+that for every ordered pair (x,y) in the relation, its reverse (y,x) is also 
+present in the final output. This is achieved by utilizing a list comprehension 
+[(y,x)| (x,y) <-rel] to systematically generate all reversed pairs from the input,
+which are then concatenated with the original list using the ++ operator.
+
+To ensure the output mathematically represents a proper set without redundant 
+elements and maintains a deterministic, ordered structure, the combined list is 
+processed using nub for deduplication and sort for canonical ordering. An explicit 
+base case symClos [] = [] safely handles empty relations, ensuring the recursion and 
+list operations do not fail on edge cases. This approach ensures the function 
+mathematically satisfies the requirements of a symmetric closure while remaining concise.
