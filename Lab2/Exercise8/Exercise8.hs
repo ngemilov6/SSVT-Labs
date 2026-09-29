@@ -356,6 +356,97 @@ readStatement input =
     not (null statements)
     ]
 
+--- TESTING
+
+--- Generates variable names from selection in working example
+genVar :: Gen Var
+genVar =
+    elements
+        [ "x",
+        "y",
+        "total",
+        "limit",
+        "counter"
+        ]
+
+--- Generates small integers
+genInteger :: Gen Integer
+genInteger = choose (-20, 20)
+
+--- Generates either an integer expression or a variable expression
+genAtomicExpr :: Gen Expr
+genAtomicExpr =
+    oneof [ I <$> genInteger, V <$> genVar]
+
+--- Generates one simple arithmetic expression
+genExpr :: Gen Expr
+genExpr = do
+    operator <- elements [Add, Subtr, Mult]
+    expr1 <- genAtomicExpr
+    expr2 <- genAtomicExpr
+    return (operator expr1 expr2)
+
+--- Generates one simple comparison condition
+genComparison :: Gen Condition
+genComparison = do
+    operator <- elements [Eq, Lt, Gt]
+    expr1 <- genExpr
+    expr2 <- genExpr
+    return (operator expr1 expr2)
+
+--- Generates one compound condition using either ^ or v and testing negation
+genCondition :: Gen Condition
+genCondition = do
+    connective <- elements [Cj, Dj]
+    condition1 <- genComparison
+    condition2 <- Ng <$> genComparison
+    return (connective [condition1, condition2])
+
+--- Generates one statement containing assignments, a conditional, a while-loop, and a sequence, based on the working example used
+genStatement :: Gen Statement
+genStatement = do
+    var1 <- genVar
+    var2 <- genVar
+
+    expr1 <- genExpr
+    expr2 <- genExpr
+
+    ifCondition <- genCondition
+    whileCondition <- genCondition
+
+    return
+        (Seq
+        [ Ass var1 expr1
+
+        , Cond
+            ifCondition
+            (Ass var1 (Add (V var1) (I 1)))
+            (Ass var1 (Subtr (V var1) (I 1)))
+
+        , While
+            whileCondition
+            (Seq
+                [ Ass var1 (Add (V var1) expr2)
+                , Ass var2 (Subtr (V var2) (I 1))
+                ])
+        ])
+
+--- Property to test whether readStatement and show are correct inverses of each other
+prop_readShowStatement :: Property
+prop_readShowStatement =
+    forAll genStatement $ \statement ->
+        counterexample
+        ("Statement text:\n" ++ show statement)
+        (readStatement (show statement) === [statement])
+
+--- Reverse property, avoiding generating printed form statements
+prop_showReadStatement :: Property
+prop_showReadStatement =
+    forAll genStatement $ \statement ->
+        counterexample
+        ("Statement text:\n" ++ show statement ++ "\nshow read statement:\n" ++ show (readStatement (show statement)))
+        (show (readStatement (show statement)) === show ([statement]))
+
 main :: IO ()
 main = do
     let complexStatement =
@@ -398,5 +489,7 @@ main = do
                 , "}"
                 ]
 
-    print complexStatement
-    print (readStatement complexStatementText)
+    -- print complexStatement
+    -- print (readStatement complexStatementText)
+    quickCheck prop_readShowStatement
+    quickCheck prop_showReadStatement
