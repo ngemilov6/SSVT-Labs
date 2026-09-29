@@ -1,0 +1,30 @@
+For exercise 2 we implemented three operators for the Set datatype, being
+union, intersection and difference. 
+
+The implementation was tested using six properties for those operations, these being:
+commutativity (for union and intersection, and noncommutativity for difference),
+idempotence (for union and intersection),
+and self-difference being empty (for difference).
+
+The operators were designed to preserve the set abstraction by ensuring all results are represented
+as normalised sets with no duplicate elements. 
+Union was implemented by concatenating the two lists and then converting 
+them to a set, so all repeated values are removed. 
+Intersection was defined as the elements appearing in both input sets, while difference was defined 
+as those elements present in the first set but absent from the second. 
+All three operators use the list2set function to remove duplicates maintaining the set property.
+This approach keeps the behaviour consistent with standard set algebra.
+
+The set operations were validated against algebraic set properties. 
+For union and intersection, the implementation was checked for commutativity and idempotence, 
+ensuring that the order of operands does not affect the result and that applying the operation to a set
+with itself gives the same set. 
+For difference, the property of non-commutativity was tested, confirming that the
+result depends on operand order, and it was also verified that subtracting a set
+from itself produces the empty set. 
+For the commutativity test for difference, a condition was put in place to ensure that
+the test sets were not empty and not equal to each other, as those are exceptions for the property.
+This condition allows us to test the propery via quickcheck.
+These properties confirm that the operators preserve the expected structure of the Set datatype.
+
+
