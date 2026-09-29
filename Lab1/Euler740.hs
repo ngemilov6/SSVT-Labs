@@ -149,7 +149,7 @@ calc_prob :: Int -> Float
 calc_prob n = 
     let double_ints = make_double_ints (n-1)
         all_perms =  all_perms_corrected (all_permutations double_ints) double_ints
-    in fromIntegral (length (general_deran all_perms double_ints)) / fromIntegral(length all_perms)
+    in 1 - fromIntegral (length (general_deran all_perms double_ints)) / fromIntegral(length all_perms)
 
 main = do
     print (showFFloat (Just 10) (calc_prob 3) "")
