@@ -1,3 +1,5 @@
+Time spent: ~50 minutes
+
 For exercise 2 we implemented three operators for the Set datatype, being
 union, intersection and difference. 
 
