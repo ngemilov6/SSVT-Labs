@@ -2,6 +2,8 @@ Exercise 5
 Time spent: 45 minutes
 
 Design Report:
+The transitive closure of a binary relation R on a set X 
+is the smallest transitive relation that contains R.
 The trClos function calculates the transitive closure of a binary relation by 
 repeatedly applying relational composition until a mathematical fixed point is 
 reached. The implementation first defines a custom infix operator (@@) to compute 
@@ -11,7 +13,7 @@ duplicates with nub.
 
 To compute the closure, the implementation abstracts the recursive logic by utilizing 
 the fixed-point combinator (fp) provided in the Lecture 4 materials. The fp function 
-takes a transformation lambda—(\r -> sort $ nub ((r @@ r) ++ r))—and repeatedly 
+takes a transformation lambda (\r -> sort $ nub ((r @@ r) ++ r)) and repeatedly 
 applies it to the relation. This lambda composes the relation with itself to find new 
 transitive pairs, appends them to the existing relation, and ensures the output is a 
 deduplicated, canonically ordered set. The fp function automatically handles the 

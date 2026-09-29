@@ -1,5 +1,5 @@
 Euler 196
-Time spent: ?? minutes
+Time spent: 130 minutes
 
 Design Report:
 Project Euler 196 asks for S(5678027) + S(7208785), where S(n) is the sum of all

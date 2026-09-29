@@ -1,17 +1,34 @@
-import System.Random
-import Data.List (nub, sort)
-import SetOrd
+module Exercise1 where
+
 import Test.QuickCheck
+import SetOrd
+import System.Random
+import Data.List
 
-genRandomSet :: IO (Set Int)
-genRandomSet = do
-    gen <- newStdGen
-    let (size, gen') = randomR (0, 20 :: Int) gen
-        rawInts = take size (randomRs (-100, 100) gen')
-    return $ Set (sort (nub rawInts))
+-- run with:
+-- runghc --ghc-arg=-i.. Exercise1.hs +RTS -M512M -RTS
 
-instance (Ord a, Arbitrary a) => Arbitrary (Set a) 
-    where arbitrary = do
-        xs <- arbitrary
-        return $ Set (sort (nub xs))
+-- Generator from scratch
+genSet :: Int -> IO (Set Int)
+genSet n = do
+    xs <- mapM (const (randomRIO (0, 20))) [1..n]
+    return (list2set xs)
+
+-- Generator using QuickCheck
+genSetQuickCheck :: Gen (Set Int)
+genSetQuickCheck = list2set <$> listOf (choose (0, 20))
+
+instance Arbitrary (Set Int) where
+    arbitrary = genSetQuickCheck
+
+-- Property to test that the generated set has no duplicates
+prop_set_no_duplicates :: Property
+prop_set_no_duplicates = forAll genSetQuickCheck $ \(Set xs) -> length xs == length (nub xs)
+
+-- no other tests since other properties require union, intersection, etc. which are not implemented yet
+
+main ::  IO ()
+main = do
+    genSet 10 >>= print
+    quickCheck prop_set_no_duplicates
 

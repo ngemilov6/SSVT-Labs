@@ -2,6 +2,8 @@ Exercise 3
 Time spent: 30 minutes
 
 Design Report:
+The symmetric closure of a binary relation R on a set X is 
+the smallest symmetric relation that contains R.
 The symClos function evaluates the symmetric closure of a binary relation,
 which is represented as an ordered list of pairs. The implementation ensures 
 that for every ordered pair (x,y) in the relation, its reverse (y,x) is also 

@@ -20,15 +20,6 @@ perfect symmetry, prop_symClos_containsOriginal confirms no original data is los
 (the superset rule), and prop_symClos_idempotent verifies that repeated applications 
 yield no further changes. For the transitive closure, the equivalent properties 
 (prop_trClos_isTransitive, prop_trClos_containsOriginal, and prop_trClos_idempotent) 
-validate transitivity, subset retention, and fixed-point termination.
-
-Regarding property strength, the "specific rule" properties (symmetry or transitivity) 
-and the "extensive" properties (superset retention) are strictly incomparable. An 
-implementation could trivially satisfy transitivity or symmetry by returning an empty
-list (which fails the superset requirement), or it could satisfy the superset 
-requirement by simply returning the original list unchanged (which fails transitivity 
-and symmetry). Therefore, neither property implies the other, and neither is stronger 
-or weaker; they must be evaluated conjunctively to prove the implementation is 
-correct. All automated QuickCheck runs passed successfully, confirming the 
-implementations satisfy the formal definitions of symmetric and transitive closures 
-within the tested domain.
+validate transitivity, subset retention, and fixed-point termination. All automated 
+QuickCheck runs passed successfully, confirming the implementations satisfy the formal 
+definitions of symmetric and transitive closures within the tested domain.
