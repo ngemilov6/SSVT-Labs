@@ -1,72 +1,160 @@
 module Exercise8 where
 
--- import Lecture4
-
 type Var = String
 
 type Env = Var -> Integer
 
-data Expr = I Integer | V Var 
-          | Add Expr Expr 
-          | Subtr Expr Expr 
-          | Mult Expr Expr 
-          deriving (Eq)
+data Expr
+  = I Integer
+  | V Var
+  | Add Expr Expr
+  | Subtr Expr Expr
+  | Mult Expr Expr
+  deriving (Eq)
+
+data Condition
+  = Prp Var
+  | Eq Expr Expr
+  | Lt Expr Expr
+  | Gt Expr Expr
+  | Ng Condition
+  | Cj [Condition]
+  | Dj [Condition]
+  deriving (Eq)
+
+data Statement
+  = Ass Var Expr
+  | Cond Condition Statement Statement
+  | Seq [Statement]
+  | While Condition Statement
+  deriving (Eq)
+
+-- Helper for creating n spaces
+indent :: Int -> String
+indent n = replicate n ' '
+
+--- Expressions don't need indentation
+showExpr :: Expr -> String
+showExpr (I int) = show int
+showExpr (V var) = show var
+showExpr (Add expr1 expr2) =
+  "(" ++ showExpr expr1 ++ " + " ++ showExpr expr2 ++ ")"
+showExpr (Subtr expr1 expr2) =
+  "(" ++ showExpr expr1 ++ " - " ++ showExpr expr2 ++ ")"
+showExpr (Mult expr1 expr2) =
+  "(" ++ showExpr expr1 ++ " * " ++ showExpr expr2 ++ ")"
 
 instance Show Expr where
-    show (I int) = show int
-    show (V var) = show var
-    show (Add expr1 expr2) = "(" ++ show expr1 ++ " + " ++ show expr2 ++ ")"
-    show (Subtr expr1 expr2) = "("++show expr1 ++ " - " ++ show expr2 ++ ")"
-    show (Mult expr1 expr2) = "("++show expr1 ++ " * " ++ show expr2 ++ ")"
+  show expr = showExpr expr
 
-data Condition = Prp Var 
-               | Eq Expr Expr 
-               | Lt Expr Expr 
-               | Gt Expr Expr 
-               | Ng Condition 
-               | Cj [Condition] 
-               | Dj [Condition]
-               deriving (Eq)
+--- Show Conditions, also no indentation necessary
+--- shows symbols (==, <, >, ~, ^, v) rather than Eq, Lt, Gt, Ng, Cj, Dj
+showCondition :: Condition -> String
+showCondition (Prp var) =
+  show var
+
+showCondition (Eq expr1 expr2) =
+  "(" ++ showExpr expr1 ++ " == " ++ showExpr expr2 ++ ")"
+
+showCondition (Lt expr1 expr2) =
+  "(" ++ showExpr expr1 ++ " < " ++ showExpr expr2 ++ ")"
+
+showCondition (Gt expr1 expr2) =
+  "(" ++ showExpr expr1 ++ " > " ++ showExpr expr2 ++ ")"
+
+showCondition (Ng condition) =
+  "(~" ++ showCondition condition ++ ")"
+
+showCondition (Cj []) =
+  "true"
+
+showCondition (Cj [condition]) =
+  showCondition condition
+
+showCondition (Cj (condition : conditions)) =
+  showCondition condition
+    ++ " ^ "
+    ++ showCondition (Cj conditions)
+
+showCondition (Dj []) =
+  "false"
+
+showCondition (Dj [condition]) =
+  showCondition condition
+
+showCondition (Dj (condition : conditions)) =
+  showCondition condition
+    ++ " v "
+    ++ showCondition (Dj conditions)
 
 instance Show Condition where
-    show (Prp var) = show var
-    show (Eq expr1 expr2) = "(" ++ show expr1 ++ " == " ++ show expr2 ++ ")"
-    show (Lt expr1 expr2) = "(" ++ show expr1 ++ " < " ++ show expr2 ++ ")"
-    show (Gt expr1 expr2) = "(" ++ show expr1 ++ " > " ++ show expr2 ++ ")"
-    show (Ng expr) = "( ~" ++ show expr ++ ")"
-    show (Cj (cond:[])) = show cond
-    show (Cj (cond:conds)) = show cond ++ " ^ " ++ show (Cj conds)
-    show (Dj (cond:[])) = show cond
-    show (Dj (cond:conds)) = show cond ++ " v " ++ show (Dj conds)
-
-showIndent :: Statement -> Int -> String
-showIndent (Ass var expr) n = (repeat n " ") ++ showIndent var n ++ " <-- " ++ showIndent expr n ++ "\n"
-showIndent (Cond condition s1 s2) n = (repeat n " ") + "if " ++ showIndent condition 0 ++ "\n" ++ (repeat (n+4) " ") ++ "then \n" ++ showIndent s1 (n+8) ++ (repeat (n+4) " ") ++"else " ++ showIndent s2 (n+8)
-showIndent (Seq ss) n = (repeat n " ") ++ showLst ss
-showIndent (While condition s1) n = (repeat n " ") ++ "while (" ++ showIndent condition 0 ++ ")\n" ++ (repeat n " ") ++ showIndent s1 (n+4)
+  show condition = showCondition condition
 
 
-data Statement = Ass Var Expr
-               | Cond Condition Statement Statement
-               | Seq [Statement]
-               | While Condition Statement
-               deriving (Eq)
+--- Show statements, which requires indentation, for conditions and while statements.
+--- Delimiters ; after assignments and {,} to indicate blocks make the output unambiguous for reading
+--- Steps of 4 spaces are used for indentation
+showIndentStatement :: Statement -> Int -> String
+showIndentStatement (Ass var expr) n =
+  indent n
+    ++ show var
+    ++ " <-- "
+    ++ showExpr expr
+    ++ ";\n"
+
+showIndentStatement (Seq statements) n =
+  concatMap (`showIndentStatement` n) statements
+
+showIndentStatement (Cond condition thenBranch elseBranch) n =
+  indent n
+    ++ "if "
+    ++ showCondition condition
+    ++ " then {\n"
+    ++ showIndentStatement thenBranch (n + 4)
+    ++ indent n
+    ++ "} else {\n"
+    ++ showIndentStatement elseBranch (n + 4)
+    ++ indent n
+    ++ "}\n"
+
+showIndentStatement (While condition body) n =
+  indent n
+    ++ "while ("
+    ++ showCondition condition
+    ++ ") do {\n"
+    ++ showIndentStatement body (n + 4)
+    ++ indent n
+    ++ "}\n"
+-- showIndentStatement :: Statement -> Int -> String
+-- showIndentStatement (Ass var expr) n =
+--   indent n
+--     ++ show var
+--     ++ " <-- "
+--     ++ showExpr expr
+--     ++ "\n"
+
+-- showIndentStatement (Cond condition s1 s2) n =
+--   indent n
+--     ++ "if "
+--     ++ showCondition condition
+--     ++ " then\n"
+--     ++ showIndentStatement s1 (n + 4)
+--     ++ indent n
+--     ++ "else\n"
+--     ++ showIndentStatement s2 (n + 4)
+
+-- showIndentStatement (Seq statements) n =
+--   concatMap (`showIndentStatement` n) statements
+
+-- showIndentStatement (While condition statement) n =
+--   indent n
+--     ++ "while ("
+--     ++ showCondition condition
+--     ++ ") do\n"
+--     ++ showIndentStatement statement (n + 4)
 
 instance Show Statement where
-  show (Ass var expr) = showIndent (Ass var expr) 0
-  show (Cond condition s1 s2) = showIndent (Cond condition s1 s2) 0
-  show (Seq ss) = showIndent (Seq ss) 0
-  show (While condition s1) = showIndent (While condition s1) 0
---   show (Ass var expr) = show var ++ " <-- " ++ show expr ++ "\n"
---   show (Cond condition s1 s2) = "if " ++ show condition ++ "\n     then " ++ show s1 ++ "     else " ++ show s2
---   show (Seq ss) = showLst ss
---   show (While condition s1) = "while (" ++ show condition ++ ")\n   " ++ show s1
-
-showLst, showRest :: [Statement] -> String
-showLst [] = ""
-showLst (f : fs) = show f ++ showRest fs
-showRest [] = ""
-showRest (f : fs) = ' ' : show f ++ showRest fs
+  show statement = showIndentStatement statement 0
 
 main :: IO ()
 main = do
