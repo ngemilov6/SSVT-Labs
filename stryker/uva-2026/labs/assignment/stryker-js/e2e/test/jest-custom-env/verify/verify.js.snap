@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`After running stryker with test runner jest on test environment "node" should report 75% mutation score 1`] = `
+Object {
+  "compileErrors": 0,
+  "ignored": 0,
+  "killed": 25,
+  "mutationScore": 75.75757575757575,
+  "mutationScoreBasedOnCoveredCode": 83.33333333333334,
+  "noCoverage": 3,
+  "pending": 0,
+  "runtimeErrors": 1,
+  "survived": 5,
+  "timeout": 0,
+  "totalCovered": 30,
+  "totalDetected": 25,
+  "totalInvalid": 1,
+  "totalMutants": 34,
+  "totalUndetected": 8,
+  "totalValid": 33,
+}
+`;

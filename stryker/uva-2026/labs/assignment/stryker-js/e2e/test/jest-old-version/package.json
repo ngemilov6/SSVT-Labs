@@ -1,0 +1,28 @@
+{
+  "name": "jest-old-version",
+  "description": "Test for the lower bound version of jest",
+  "scripts": {
+    "test:unit": "jest",
+    "test": "stryker run && npm run verify",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "~24.9.0",
+    "jest-environment-node": "~24.9.0",
+    "@stryker-mutator/core": "workspace:*",
+    "@stryker-mutator/jest-runner": "workspace:*"
+  },
+  "dependenciesMeta": {
+    "@stryker-mutator/core": {
+      "injected": true
+    },
+    "@stryker-mutator/jest-runner": {
+      "injected": true
+    }
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

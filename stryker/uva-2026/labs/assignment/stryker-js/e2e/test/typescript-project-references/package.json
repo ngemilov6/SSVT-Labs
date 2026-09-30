@@ -1,0 +1,23 @@
+{
+  "name": "typescript-project-references",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A module to perform an integration test",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+  "clean:dist": "rimraf dist .stryker-tmp reports",
+  "build": "npm run clean:dist && tsc -b tsconfig.json",
+    "test:unit": "npm run build && mocha",
+    "clean:reports": "rimraf \"reports\" \"dist\" \"stryker.log\"",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test": "npm run clean:reports && stryker run && npm run verify"
+  },
+  "mocha": {
+    "spec": [
+      "dist/test/*.js"
+    ]
+  },
+  "author": "",
+  "license": "ISC"
+}

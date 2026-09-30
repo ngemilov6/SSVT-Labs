@@ -1,0 +1,34 @@
+module.exports = function (config) {
+  config.set({
+    frameworks: ['jasmine', 'vite'],
+    files: [
+      {
+        pattern: 'test/math.spec.js',
+        type: 'module',
+        watched: false,
+        served: false,
+      },
+    ],
+    vite: {
+      config: {
+        resolve: {
+          alias: {
+            '/base': '',
+          },
+        },
+      },
+    },
+    reporters: ['progress'],
+    colors: true,
+    autoWatch: false,
+    browsers: ['ChromeHeadless'],
+    singleRun: true,
+    concurrency: Infinity,
+    plugins: [
+      require.resolve('karma-chrome-launcher'),
+      require.resolve('karma-jasmine'),
+      require.resolve('karma-mocha'),
+      require.resolve('karma-vite'),
+    ],
+  });
+};

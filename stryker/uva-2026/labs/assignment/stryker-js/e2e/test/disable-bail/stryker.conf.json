@@ -1,0 +1,22 @@
+{
+  "$schema": "../../node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "concurrency": 1,
+  "reporters": ["json"],
+  "disableBail": true,
+  "testRunnerNodeArgs": ["--experimental-vm-modules"],
+  "karma": {
+    "configFile": "karma.conf.cjs"
+  },
+  "tap": {
+    "testFiles": ["test/*.tap.js"]
+  },
+  "plugins": [
+    "@stryker-mutator/karma-runner",
+    "@stryker-mutator/tap-runner",
+    "@stryker-mutator/jasmine-runner",
+    "@stryker-mutator/jest-runner",
+    "@stryker-mutator/mocha-runner",
+    "@stryker-mutator/cucumber-runner",
+    "@stryker-mutator/vitest-runner"
+  ]
+}

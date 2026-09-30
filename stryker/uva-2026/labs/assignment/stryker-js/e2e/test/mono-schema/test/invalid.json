@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "allowConsoleColors": true,
+  "jest": {
+    "config": ""
+  },
+  "jasmineConfigFile": false,
+  "karma": {
+    "ngConfig": {
+      "testArguments": "--test test"
+    }
+  },
+  "cucumber": {
+    "features": [32],
+    "tags": "tag",
+    "profile": 42
+  },
+  "vitest": {
+    "options": {
+      "coverage": false
+    }
+  },
+  "tap": {
+    "specFiles": "{**/@(test|tests|__test__|__tests__)/**,**/*.@(test|tests|spec)}.@(cjs|mjs|js|jsx|ts|tsx)"
+  }
+}

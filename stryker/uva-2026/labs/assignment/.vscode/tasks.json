@@ -1,0 +1,32 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "tsc-watch",
+      "type": "shell",
+      "command": "npm start",
+      "dependsOn": "generate",
+      "problemMatcher": "$tsc-watch",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/stryker-js"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "generate",
+      "type": "shell",
+      "command": "npm run generate",
+      "options": {
+        "cwd": "${workspaceFolder}/stryker-js"
+      },
+      "isBackground": true,
+      "group": "build"
+    }
+  ]
+}

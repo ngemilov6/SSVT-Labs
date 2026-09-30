@@ -1,0 +1,20 @@
+{
+  "name": "disable-bail",
+  "version": "1.0.0",
+  "description": "A e2e test for --disableBail",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test:cucumber": "cucumber-js",
+    "test:mocha": "mocha",
+    "test:jasmine": "jasmine",
+    "test:karma": "karma start karma.conf.cjs",
+    "test:jest": "cross-env NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
+    "test:tap": "tap test/*.tap.js",
+    "test:vitest": "vitest run",
+    "test": "mocha --no-config --no-timeout verify/verify.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

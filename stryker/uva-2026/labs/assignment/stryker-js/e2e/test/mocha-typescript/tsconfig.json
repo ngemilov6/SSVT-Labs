@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2017"],
+    "target": "ES2022",
+    "module": "NodeNext",
+    "types": ["mocha", "node"],
+    "skipLibCheck": true
+  },
+  "include": ["src", "test"]
+}

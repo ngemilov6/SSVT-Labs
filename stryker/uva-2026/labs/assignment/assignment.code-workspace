@@ -1,0 +1,112 @@
+{
+  "folders": [
+    {
+      "name": "numbers.js",
+      "path": "numbers.js",
+    },
+    {
+      "name": "stryker-js",
+      "path": "stryker-js",
+    },
+  ],
+  "settings": {
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/coverage": true,
+      "**/bower_components": true,
+      "**/*.code-search": true,
+      "**/*.tsbuildinfo": true,
+      "**/.stryker-tmp": true,
+      "**/CHANGELOG.md": true,
+      "**/dist": true,
+      "**/.nyc_output": true,
+      "**/reports": true,
+    },
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+    },
+    "task.autoDetect": "off",
+    "vitest.disableWorkspaceWarning": true,
+    "cSpell.language": "en",
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "EditorConfig.EditorConfig",
+      "esbenp.prettier-vscode",
+      "stryker-mutator.stryker-mutator",
+    ],
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "tsc-watch",
+        "type": "shell",
+        "command": "npm start",
+        "dependsOn": "generate",
+        "problemMatcher": "$tsc-watch",
+        "isBackground": true,
+        "options": {
+          "cwd": "${workspaceFolder:stryker-js}",
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": true,
+        },
+      },
+      {
+        "label": "generate",
+        "type": "shell",
+        "command": "npm run generate",
+        "options": {
+          "cwd": "${workspaceFolder:stryker-js}",
+        },
+        "isBackground": true,
+        "group": "build",
+      },
+    ],
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "👽 Run Stryker",
+        "skipFiles": ["<node_internals>/**"],
+        "args": ["run"],
+        "cwd": "${workspaceFolder:numbers.js}",
+        "program": "${workspaceFolder:stryker-js}/packages/core/bin/stryker.js",
+        "outputCapture": "std",
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "☕ Run Unit tests",
+        "skipFiles": ["<node_internals>/**"],
+        "args": ["--ui", "tdd", "test/basic.test.js"],
+        "cwd": "${workspaceFolder:numbers.js}",
+        "program": "${workspaceFolder:numbers.js}/node_modules/mocha/bin/_mocha",
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "🎻 Run Unit tests in the instrumenter",
+        "skipFiles": ["<node_internals>/**"],
+        "cwd": "${workspaceFolder:stryker-js}/packages/instrumenter",
+        "program": "${workspaceFolder:stryker-js}/node_modules/mocha/bin/_mocha",
+        "env": {
+          "CHAI_JEST_SNAPSHOT_UPDATE_ALL": "false",
+        },
+      },
+    ],
+  },
+}

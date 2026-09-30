@@ -1,0 +1,39 @@
+{
+  "$schema": "../../../node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "allowConsoleColors": true,
+  "babel": {
+    "options": {
+      "compact": "auto"
+    }
+  },
+  "jest": {
+    "config": {}
+  },
+  "wct": {
+    "configFile": "a file"
+  },
+  "jasmineConfigFile": "A file",
+  "webpack": {
+    "configFile": "webpack.config.js"
+  },
+  "karma": {
+    "ngConfig": {
+      "testArguments": { "test": "test" }
+    }
+  },
+  "tsconfig": {
+    "moduleResolution": "node"
+  },
+  "cucumber": {
+    "features": ["my-feature.feature"],
+    "profile": "stryker",
+    "tags": ["@tag", "@tag2"]
+  },
+  "vitest": {
+    "configFile": "vitest.config.js"
+  },
+  "tap": {
+    "testFiles": ["{**/@(test|tests|__test__|__tests__)/**,**/*.@(test|tests|spec)}.@(cjs|mjs|js|jsx|ts|tsx)"],
+    "nodeArgs": ["--import", "tsx"]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": "dist",
+
+    // These settings should be overridden by the typescript checker
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    "types": []
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "karma-old-version",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A module to perform an integration test",
+  "main": "index.js",
+  "retries": 3,
+  "retries_comment": "Unfortunately very unstable on windows and we don't have the time to dive into it.",
+  "scripts": {
+    "clean:reports": "rimraf \"reports\"",
+    "test:unit": "karma start --singleRun",
+    "test": "npm run clean:reports && stryker run --logLevel trace && npm run verify",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js"
+  },
+  "devDependencies": {
+    "chai": "4.4.1",
+    "karma": "6.3.0",
+    "karma-chai": "0.1.0",
+    "karma-chrome-launcher": "3.1.0",
+    "karma-mocha": "2.0.1",
+    "@stryker-mutator/core": "workspace:*",
+    "@stryker-mutator/karma-runner": "workspace:*"
+  },
+  "dependenciesMeta": {
+    "@stryker-mutator/core": {
+      "injected": true
+    },
+    "@stryker-mutator/karma-runner": {
+      "injected": true
+    }
+  },
+  "license": "ISC"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "mutation-range",
+  "description": "A test project for only running specific mutants, rather than all mutants",
+  "scripts": {
+    "test": "stryker run && npm run verify",
+    "test:unit": "jest",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js"
+  }
+}

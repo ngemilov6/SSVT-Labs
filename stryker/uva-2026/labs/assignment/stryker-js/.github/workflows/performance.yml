@@ -1,0 +1,30 @@
+name: Performance
+
+on:
+  workflow_dispatch:
+    inputs:
+      PERF_TEST_GLOB_PATTERN:
+        description: 'Glob pattern'
+        required: true
+        default: '*'
+
+jobs:
+  performance_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: ./.github/setup
+      - name: Build packages
+        run: pnpm run build
+      - name: Run performance tests
+        run: pnpm run perf
+        env:
+          PERF_TEST_GLOB_PATTERN: ${{ github.event.inputs.PERF_TEST_GLOB_PATTERN }}
+      - name: Store reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: mutation-testing-reports
+          path: perf/test/*/reports/mutation

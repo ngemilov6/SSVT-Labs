@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.settings.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "types": ["mocha", "node"],
+    "skipLibCheck": true
+  },
+  "include": ["test", "typings"],
+  "references": [
+    {
+      "path": "./tsconfig.src.json"
+    },
+    {
+      "path": "../test-helpers/tsconfig.src.json"
+    }
+  ]
+}

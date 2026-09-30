@@ -1,0 +1,16 @@
+{
+  "name": "reporters-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A module to perform an integration test",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "clean:reports": "rimraf \"reports\"",
+    "test:unit": "mocha",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test": "npm run clean:reports && mkdir -p reports && stryker run > reports/stdout.txt && npm run verify"
+  },
+  "author": "",
+  "license": "ISC"
+}

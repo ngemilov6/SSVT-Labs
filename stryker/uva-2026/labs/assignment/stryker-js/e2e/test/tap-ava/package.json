@@ -1,0 +1,19 @@
+{
+  "name": "tap-ava",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A project using ava",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "clean:reports": "rimraf \"reports\"",
+    "test": "npm run clean:reports && stryker run && npm run verify",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test:unit": "node --test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ava": "8.0.0"
+  }
+}

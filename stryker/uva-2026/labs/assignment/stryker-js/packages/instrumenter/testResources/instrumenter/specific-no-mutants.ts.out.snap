@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`instrumenter integration with mutation ranges should not make any mutations in a file with mutate = [] 1`] = `
+"const a = 1 + 1;
+const b = 1 - 1;"
+`;

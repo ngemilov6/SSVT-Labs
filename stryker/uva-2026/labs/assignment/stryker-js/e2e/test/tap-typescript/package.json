@@ -1,0 +1,16 @@
+{
+  "name": "tap-typescript",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A project using node-tap and typescript",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "clean:reports": "rimraf \"reports\"",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test:unit": "NODE_OPTIONS=\"--import tsx\" tap --ts",
+    "test": "npm run clean:reports && stryker run && npm run verify"
+  },
+  "author": "",
+  "license": "ISC"
+}

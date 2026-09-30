@@ -1,0 +1,17 @@
+{
+  "name": "jest-with-ts",
+  "description": "A test project for using stryker with jest and jest-ts preprocessor. Inspired by the stryker-dashboard source code.",
+  "scripts": {
+    "test": "stryker run && npm run verify",
+    "test:unit": "jest",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "azure-storage": "^2.10.7"
+  },
+  "devDependencies": {
+    "@types/jest": "~29.5.13",
+    "@types/node": "^22.7.4"
+  }
+}

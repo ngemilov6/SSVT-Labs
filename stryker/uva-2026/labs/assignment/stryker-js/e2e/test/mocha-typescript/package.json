@@ -1,0 +1,10 @@
+{
+  "name": "mocha-typescript",
+  "description": "A test for mocha using tsx to run TypeScript tests",
+  "type": "module",
+  "scripts": {
+    "test:unit": "mocha",
+    "test": "stryker run && npm run verify",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js"
+  }
+}

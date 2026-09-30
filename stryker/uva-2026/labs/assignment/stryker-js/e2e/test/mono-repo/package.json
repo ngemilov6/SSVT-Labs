@@ -1,0 +1,16 @@
+{
+  "name": "mocha-repo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A module to perform an integration test",
+  "main": "index.js",
+  "scripts": {
+    "bootstrap": "node tasks/bootstrap.js",
+    "clean:reports": "rimraf \"reports\"",
+    "test": "npm run bootstrap && npm run clean:reports && stryker run && npm run verify",
+    "test:unit": "mocha",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

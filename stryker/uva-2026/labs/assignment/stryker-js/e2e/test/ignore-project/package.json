@@ -1,0 +1,12 @@
+{
+  "name": "ignore-project",
+  "description": "e2e test for different ignored mutants",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:unit": "mocha",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test": "stryker run && npm run verify"
+  }
+}

@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`After running stryker on a cucumber-ts project should report expected scores 1`] = `
+Object {
+  "compileErrors": 0,
+  "ignored": 0,
+  "killed": 65,
+  "mutationScore": 44.5945945945946,
+  "mutationScoreBasedOnCoveredCode": 61.6822429906542,
+  "noCoverage": 41,
+  "pending": 0,
+  "runtimeErrors": 17,
+  "survived": 41,
+  "timeout": 1,
+  "totalCovered": 107,
+  "totalDetected": 66,
+  "totalInvalid": 17,
+  "totalMutants": 165,
+  "totalUndetected": 82,
+  "totalValid": 148,
+}
+`;

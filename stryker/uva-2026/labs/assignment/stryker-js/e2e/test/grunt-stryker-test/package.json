@@ -1,0 +1,10 @@
+{
+  "name": "grunt-stryker-test",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean:reports": "rimraf reports stryker.log",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test": "npm run clean:reports && grunt test && npm run verify"
+  }
+}

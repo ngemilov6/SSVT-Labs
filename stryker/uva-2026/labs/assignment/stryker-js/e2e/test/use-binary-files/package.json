@@ -1,0 +1,16 @@
+{
+  "name": "use-binary-filesg",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A module to verify issue https://github.com/stryker-mutator/stryker-js/issues/4386",
+  "main": "index.js",
+  "scripts": {
+    "clean:reports": "rimraf \"reports\" \"stryker.log\"",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test:unit": "mocha",
+    "test": "npm run clean:reports && stryker run && npm run verify"
+  },
+  "author": "",
+  "license": "ISC"
+}

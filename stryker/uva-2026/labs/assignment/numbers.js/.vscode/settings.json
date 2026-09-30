@@ -1,0 +1,8 @@
+{
+  "strykerMutator.enable": true,
+  "strykerMutator.server.configFile": "stryker.config.json",
+  "strykerMutator.server.workingDirectory": ".",
+  "strykerMutator.watchPattern": "lib/**/*.js",
+  "strykerMutator.server.path": "../stryker-js/packages/core/bin/stryker.js",
+  "strykerMutator.server.args": ["serve", "stdio", "--", "--concurrency", "8"]
+}

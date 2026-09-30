@@ -1,0 +1,27 @@
+{
+  "name": "cucumber-old-version",
+  "version": "0.1.0",
+  "description": "An e2e test for the cucumber-js lower bound version",
+  "private": true,
+  "scripts": {
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test:unit": "cucumber-js",
+    "test": "stryker run && npm run verify"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "8.0.0",
+    "@stryker-mutator/core": "workspace:*",
+    "@stryker-mutator/cucumber-runner": "workspace:*"
+  },
+  "dependenciesMeta": {
+    "@stryker-mutator/core": {
+      "injected": true
+    },
+    "@stryker-mutator/cucumber-runner": {
+      "injected": true
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

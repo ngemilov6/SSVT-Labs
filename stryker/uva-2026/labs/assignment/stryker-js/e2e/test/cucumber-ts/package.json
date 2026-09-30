@@ -1,0 +1,17 @@
+{
+  "name": "cucumber-ts",
+  "version": "0.1.0",
+  "description": "An e2e test for cucumber with typescript",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "stryker run && npm run verify",
+    "test:unit": "cross-env NODE_OPTIONS=\"--import tsx\" cucumber-js",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js"
+  },
+  "author": "Nico Jansen",
+  "license": "Apache-2.0",
+  "devDependencies": {},
+  "dependencies": {}
+}

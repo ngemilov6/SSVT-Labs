@@ -1,0 +1,12 @@
+{
+  "name": "jasmine-ts",
+  "description": "A test for jasmine using TypeScript with native Node strip-types",
+  "scripts": {
+    "test:unit": "jasmine",
+    "verify": "mocha --no-config --no-package --timeout 0 verify/verify.js",
+    "test": "stryker run && npm run verify"
+  },
+  "devDependencies": {
+    "@types/jasmine": "~3.5.11"
+  }
+}

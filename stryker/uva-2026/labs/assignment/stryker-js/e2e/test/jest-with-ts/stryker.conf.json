@@ -1,0 +1,15 @@
+{
+  "$schema": "../../node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutate": [
+    "src/data-access/mappers/TableStorageMapper.ts",
+    "src/components/hello-component.ts"
+  ],
+  "packageManager": "npm",
+  "testRunner": "jest",
+  "tempDirName": "stryker-tmp",
+  "concurrency": 2,
+  "checkers": ["typescript"],
+  "coverageAnalysis": "off",
+  "reporters": ["progress", "html", "json"],
+  "plugins": ["@stryker-mutator/jest-runner", "@stryker-mutator/typescript-checker"]
+}

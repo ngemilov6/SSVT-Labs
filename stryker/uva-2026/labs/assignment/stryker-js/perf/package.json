@@ -1,0 +1,18 @@
+{
+  "name": "performance-test",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.5.1",
+  "devDependencies": {
+    "rxjs": "7.8.2",
+    "typescript": "6.0.3"
+  },
+  "scripts": {
+    "merge-config": "node tasks/merge-config.js",
+    "bootstrap": "node tasks/install.js",
+    "setup": "pnpm run merge-config && pnpm run bootstrap",
+    "lint": "tsc",
+    "test": "node tasks/run-perf-tests.js"
+  }
+}
