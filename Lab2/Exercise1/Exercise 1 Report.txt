@@ -1,0 +1,19 @@
+Time spent: ~20 minutes
+
+For this exercise we implemented two random generators, for the Set datatype.
+The first generator works without quickcheck, while the other is designed for use with the forAll clause, and 
+define an instance of the Arbitrary type from quickcheck.
+
+The first ("from scratch") generator generates a set with elements of values [0,20] of random length.
+The length is equal to min(n, 21) for non-negative n, where n is the value passed to the generator function.
+All duplicate elements are removed from the set at the end, preserving the set property.
+
+The second ("quickcheck") generator generates a set with elements of values [0,20] of random length between 0 and 21.
+All duplicate elements are removed from the set at the end, preserving the set property.
+
+The hard length limit on both generators serves to keep tests quick and concise, as functions/properties tested
+on extremely long sets might be very computationally intensive. Due to the limit on set sizes testing is impacted, as it is not exhaustive
+and leaves out a large gap in the tested domain. It is not feasible to test the entire domain for this (or in fact any generator) implementation. While these generators have their domain limited, and are tested in this limited domain, we cannot be fully sure whether they would work for a larger domain.
+
+Both generators produce valid results for testing, but due to being designed with quickcheck in mind,
+the "quickcheck" generator is preferable when using quickcheck.

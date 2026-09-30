@@ -41,6 +41,7 @@ test_even_p n =
     classify (odd n) "Odd" $
     property True
 
+<<<<<<< HEAD
 --- For each property, the property itself as the test and then the property definition which includes the name for printing.
 test_even :: Int -> Bool
 test_even n = even n
@@ -104,3 +105,16 @@ main = do
 I adjusted the design after the initial construction to include the name in the property. This is so that I could include the Show function for these properties to be printed.
 In order to do this, I had to adjust the quicksort mechanism to split and only consider the actual Int -> Bool part of the property for analysis of strength.
 -}
+=======
+main :: IO ()
+main = do
+    putStrLn "--- Testing Property Distribution ---"
+    quickCheck test_even_p
+    
+    putStrLn "\n--- Descending Strength List ---"
+    let domain = [(-10)..10]
+    let ranking = quickRank domain [prop_even, prop_even_g3, prop_even_og3, prop_even_g3_oeven]
+    
+    -- Print the ranked equivalence classes
+    mapM_ print ranking
+>>>>>>> main

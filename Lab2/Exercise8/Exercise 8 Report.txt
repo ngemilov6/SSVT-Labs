@@ -1,0 +1,54 @@
+Time Spent: ~300min
+
+Design Report:
+Throughout this implementation, we used Lecture 3 as reference.
+There were two parts to the implementation: show and read.
+Show: 
+We wanted to show the structure of statements in the prented output,
+which required proper indentation management. This is only the case for statements,
+where it requires an additional argument of the indentation level.
+Expressions, and conditions were implemented recursively using the structures that we have
+gotten familiar with, using the symbols +, -, *, ==, <, >, ~, ^, and v 
+for addition, subtraction, multiplication, equality, greater than, less than,
+negation, conjunction and disjunction respectively.
+For statments we use showIndentStatement instead, which takes an integer n.
+Assignments do not need indentation and are represented as "var <-- value".
+Sequences, are resolved to the individual statments, as there is no further meaning
+when shown.
+Conditions are indented, with an additional 4 spaces in the then block and the else block.
+4 was chosen for no particular reason, simply to create some visual distance.
+For while, the indent also applies, and the body is indented additionally as well.
+This produces a nice output structure.
+Critically, semicolons are used at the end of each assignment, and {} are used to encompass blocks.
+Read:
+We implemented reading similar to the read in Lecture 3 using a lexer to tokenize the input string.
+All possible tokens are encoded, including brackets (both () and {}) as well as key words such as
+"if", "then", "else", "do", "while".
+The lexer reads a string and recursively assigns tokens to the front of the input, and then processes the rest.
+Integers are parsed separately, distinguishing positive and negative numbers.
+The word tokens mentioned are separately mapped from their respective strings using wordToken,
+and lexWord is used to assign these.
+We then implemented a parsing system for these lists of tokens, similar to Lecture3.
+Expressions are parsed recursively, distinguishing between the options for the type of expression.
+Conditions are parsed starting with disjunctions and conjunctions on the highest level, and then checking
+for atomic conditions of all types. Nested brackets are avoided using helpers makeCj and make Dj.
+Statements are parsed in three cases: assignments, if and while statements.
+For if and while statements we have the additional parsing of the block contents contained within {}.
+For this parseBlock unpacks the statements inside, using parse StatementList.
+This recursively parses individual statements in a list and combines them.
+readStatement is the call to read the statement, using the lexer to generate the list of tokens, and then parsing that 
+to a list of statements.
+This recursive approach allows for all statements to be read, if proper syntax is applied for which we do need to enforce
+the additional rules of using ;, and {} to avoid ambiguity.
+Still there is some ambiguity left, as a sequence of a single statement cannot really be distinguished for the single statement itself.
+This implementation also allows for easy extensions to read expressions and conditions as well, requiring only one additional function
+at either level, lexing the input and calling the respective praser on that level.
+
+Test Report:
+For testing, with the time already spent, the design of full recursive generator was ommitted.
+Instead, generators from a list of possible variable names, integers, expressions, etc. was chosen.
+This was based on a working example testing all symbols and operators which was carried through the design
+of these functions. The generation in this fashion does significantly reduce the input domain, however, it is able to demonstrate
+general functionality for the operators. It uses a template Statement which is filled in with generated values using QuickCheck.
+The main property with is tested both ways is that show and read are indeed inverses of each other.
+so that read(show(statement)) == statement. This is the case.

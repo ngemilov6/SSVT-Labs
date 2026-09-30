@@ -55,11 +55,23 @@ makePerm xs = do
     remaining <- makePerm rest
     pure (select:remaining)
 
+<<<<<<< HEAD
+=======
+--- Generates a list of n random input numbers between 1 and and supplied maximum value
+genList :: Int -> Gen [Int]
+genList 0 = pure []
+genList n = do
+    ns <- makePerm [1..(n+10)]
+    pure (take n ns)
+
+
+>>>>>>> main
 --- Generator for permutations, based on a random length within bounds and a random maximum value within bounds.
 --- An initial permutation is generated, and from that, a new permutation.
 gen_perms :: Gen [[Int]]
 gen_perms = do
     length_perm <- genSmallNat 3 10
+<<<<<<< HEAD
     max_val <- genSmallNat 1 100
     init_perm <- genList length_perm max_val
     perm <- makePerm init_perm
@@ -98,3 +110,37 @@ for testing.
 I tested two properties, the length being the same, and that all elements from one list, are also present in the other with the same frequency.
 
 -}
+=======
+    init_perm <- genList length_perm
+    perm <- makePerm init_perm
+    pure [init_perm, perm]
+
+gen_perm :: Gen [Int]
+gen_perm = do
+    length_perm <- genSmallNat 3 10
+    init_perm <- genList length_perm
+    pure init_perm
+
+main :: IO ()
+main = do
+    putStrLn "Running QuickCheck Properties for isPermutation..."
+    
+    putStrLn "\n1. Reflexivity:"
+    quickCheck prop_reflexive
+    
+    putStrLn "2. Reverse:"
+    quickCheck prop_reverse
+    
+    putStrLn "3. Symmetry:"
+
+    quickCheck prop_symmetric
+
+    putStrLn "4. Faulty Permutation"
+    quickCheck prop_faulty_permutation
+
+    -- print (isPermutation [1,2,4] [4,2,4])
+    -- print (isPermutation [1,2,4,5] [1,2,4])
+    -- print (isPermutation [1,2,3,4] [1,2,3,4])
+    -- print (isPermutation [1,2,3,4] [1,2,4,3])
+    -- print (isPermutation "abc" "acb")
+>>>>>>> main

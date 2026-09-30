@@ -1,0 +1,11 @@
+Time taken: 10 min
+
+Design report:
+We implemented a function to find counterexamples to the conjecture that the product of the first n primes plus one is always prime.
+We used the definitions for prime and primes from lecture 1 to create an infinite list of prime products.
+
+Then we created an infinite list of counterexamples by iterating through the integers [1..], taking the corresponding slice of primes,
+calculating the product of that slice, and checking if the next integer (product + 1) is not prime.
+If it is not prime, we add the list of primes and the contradicting number to the output.
+
+

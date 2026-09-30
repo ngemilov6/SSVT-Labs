@@ -1,0 +1,34 @@
+Exercise 3
+Time spent: 90 minutes
+
+Design Report: 
+The assignment requires implementing four properties from Workshop 2 
+as Haskell functions and sorting them into a descending strength list over the 
+domain [(-10)..10]. During development, we evaluated two distinct architectural 
+approaches. The initial approach (Nikola's) manually evaluated the stronger and 
+weaker predicates between specific pairs of properties using hardcoded terminal 
+outputs. While functionally correct, this manual approach lacked scalability and 
+could not automatically handle incomparable properties or equivalence classes. 
+We ultimately pivoted to a robust, automated approach (Jonas's). This design abstracts 
+the problem by introducing a custom Prop data type, which encapsulates both the 
+boolean evaluation function (Int -> Bool) and a String representation for clean 
+terminal printing. We then defined strict logical relations (strictly_stronger, 
+strictly_weaker, equally_strong, not_comparable) built atop the required stronger 
+and weaker definitions. This allowed us to implement quickRank, a custom sorting 
+algorithm adapted from QuickSort, which dynamically filters and groups the Prop 
+instances into nested lists of equivalence classes based on their mathematical 
+implication over the specified domain.
+
+Test Report and Ranking: 
+The automated ranking algorithm successfully generated a strictly descending partial 
+order. The strongest property is "even and >3", as it imposes the strictest constraints; 
+any integer satisfying this inherently satisfies all others in the list. The algorithm 
+correctly grouped "even" and "(even and >3) or even" into a single equivalent level immediately 
+below the strongest. These two are logically identical and form an equivalence class, 
+as there is no element that satisfies the latter without also satisfying the former. 
+Finally, "even or >3" was placed at the bottom as the weakest property, as its relaxed 
+constraints include all elements from the preceding levels, alongside any odd elements 
+greater than 3. To ensure the integrity of our domain testing, we also utilized QuickCheck's 
+classify function on a generic property to monitor the distribution of inputs, confirming 
+that our test mechanisms were evaluating a healthy balance of both valid and invalid 
+(even and odd) cases rather than halting at the first counterexample.

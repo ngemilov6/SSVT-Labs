@@ -1,0 +1,34 @@
+Euler Problem 10
+Time spent: 130 minutes
+
+Design Report: 
+The solution for Euler Problem 10 computes the sum of all prime numbers 
+below two million by constructing an infinite, lazily evaluated list of primes. 
+To achieve the necessary computational efficiency for such a large upper bound, 
+the algorithm employs optimized trial division. Rather than dividing candidate 
+numbers by all preceding integers, it restricts divisibility checks strictly to 
+previously discovered primes. Furthermore, the implementation utilizes a 
+right-fold (foldr) to apply a mathematical short-circuiting condition: the 
+recursive division checks terminate immediately once the square of the test 
+prime exceeds the candidate number (p*p > n). This bounding mathematically 
+guarantees primality while drastically reducing time complexity. To satisfy 
+the assignment's explicit requirement for testing bonus exercises, the static 
+two million target was abstracted into a generalized helper function, 
+sumPrimesBelow, allowing the underlying summation and generation logic to 
+be systematically evaluated.
+
+Test Report:
+The testing strategy utilizes QuickCheck to validate both the prime generator 
+and the summation logic through three targeted properties. The first property, 
+prop_isActuallyPrime, ensures the soundness of the highly optimized lazy generator; 
+it randomly indexes into the infinite prime list and cross-verifies the extracted 
+value against an independently implemented, strictly naive prime checker. The 
+second property, prop_monotonicSum, verifies the mathematical monotonicity of 
+the summation function by generating pairs of random upper bounds and asserting 
+that the prime sum up to the smaller bound never exceeds the sum up to the larger 
+bound. Finally, prop_knownBaseCases acts as a deterministic regression test, 
+verifying the function against small, manually calculable prime sums (such as 
+bounds of 10 and 20) to guarantee that the takeWhile constraint accurately handles 
+upper limit exclusions. After successfully passing this rigorous automated suite, 
+the function evaluates the ultimate target of two million, yielding the final sum 
+of 142913828922.

@@ -1,52 +1,62 @@
-{-# LANGUAGE NoExplicitForAll #-}
-
 module Exercise1 where
 
-import Data.List
-import System.Random
-import Test.QuickCheck
--- import Lecture1
--- import Lecture2
--- import Lecture3
-
+import Prelude
+import Test.QuickCheck ( quickCheck, NonNegative(NonNegative), Gen, Property, forAll, chooseInteger )
+import Text.Printf (errorBadArgument)
 
 infix 1 -->
 (-->) :: Bool -> Bool -> Bool
 p --> q = (not p) || q
 
--- forall :: [a] -> (a -> Bool) -> Bool
--- forall = flip all
-
+--- Recursive definition of factorial.
 factorial :: Integer -> Integer
-factorial 0 = 1
-factorial n = n*(factorial (n-1))
+factorial n | n > 0 = n * factorial (n - 1)
+            | n == 0 = 1 
+            | otherwise = error "Bad argument"
+
+--- Helper to generate the list [1..n] with special case for 0 = [1].
+listReference :: Integer -> [Integer]
+listReference 0 = [1]
+listReference n = [1..n]
+
+--- Definition of factorial using foldr, also applying a recursive multiplication procedure.
+factorialReference :: Integer -> Integer
+factorialReference n 
+    | n >= 0 = foldr (*) 1 (listReference n)
+    | otherwise = error "Bad argument"
+                    
 
 genSmallNat :: Gen Integer
-genSmallNat = chooseInteger (0, 50)
+genSmallNat = chooseInteger (0, 20)
 
 prop_factorialPositive :: Property
-prop_factorialPositive = forAll genSmallNat (\n -> factorial n >= 1)
+prop_factorialPositive = 
+    forAll genSmallNat (\n -> factorial n >= 1)
 
 prop_factorialRecursive :: Property
-prop_factorialRecursive = forAll genSmallNat (\n -> factorial (n + 1) == (n + 1) * factorial n)
+prop_factorialRecursive = 
+    forAll genSmallNat (\n -> factorial (n + 1) == (n + 1) * factorial n)
 
 prop_factorialIncreasing :: Property
-prop_factorialIncreasing = forAll genSmallNat (\n -> n /= 0 --> factorial (n + 1) > factorial n)
+prop_factorialIncreasing = 
+    forAll genSmallNat (\n -> n /= 0 --> factorial (n + 1) > factorial n)
 
-main :: IO()
+--- Properties using reference function to verify factorial
+prop_factorial_matches_reference_1 :: Property
+prop_factorial_matches_reference_1 = 
+    forAll genSmallNat (\n -> factorial n == factorialReference n)
+
+prop_factorial_matches_reference_2 :: NonNegative Integer -> Bool
+prop_factorial_matches_reference_2 (NonNegative n) = 
+    factorial n == factorialReference n
+
+main ::  IO ()
 main = do
+    putStrLn "Running QuickCheck Properties"
     quickCheck prop_factorialPositive
-    quickCheck prop_factorialRecursive
-    quickCheck prop_factorialIncreasing
+    quickCheck prop_factorial_matches_reference_1
+    quickCheck prop_factorial_matches_reference_2
+
     input <- getLine
     let n = read input :: Integer
-    print (factorial n)
-
-
-{- Time taken: 30min
-The factorial function is defined recursively, with the base case being factorial 0 = 1. 
-The properties defined for testing the factorial function include checking that the result is always positive (given in the task), 
-that the recursive definition holds, and that the function is increasing for positive integers.
-For the last it was necessary to include the precondition that n is not equal to 0, since factorial(0) = 1 and factorial(1) = 1, which violates the property for this specific case.
-The small natural number generator was also taken from the example, but extended to a slightly bigger range.
--}
+    putStrLn ((show n) ++ "! = " ++ show (factorial n))

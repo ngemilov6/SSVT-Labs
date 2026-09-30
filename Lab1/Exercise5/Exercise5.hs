@@ -55,10 +55,21 @@ makePerm xs = do
     remaining <- makePerm rest
     pure (select:remaining)
 
+<<<<<<< HEAD
+=======
+--- Generates a list of n random input numbers between 1 and supplied maximum value
+genList :: Int -> Gen [Int]
+genList 0 = pure []
+genList n = do
+    perm <- makePerm [0..(n-1)]
+    pure perm
+
+>>>>>>> main
 --- Generator for permutations, based on a random length within bounds and a random maximum value within bounds.
 --- An initial permutation is generated, and from that, a new permutation.
 gen_perms :: Gen [[Int]]
 gen_perms = do
+<<<<<<< HEAD
     length_perm <- genSmallNat 1 5
     max_val <- genSmallNat 1 10
     init_perm <- genList length_perm max_val
@@ -159,3 +170,29 @@ The manual values were chosen to test for edge cases where list were identical, 
 Below the permutation at the same level as the equal length property is the same count property.
 5. I automated the test process with quickCheck
 -}
+=======
+    length_perm <- genSmallNat 3 10
+    init_perm <- genList length_perm
+    perm <- makePerm init_perm
+    pure [init_perm, perm]
+
+gen_perm :: Gen [Int]
+gen_perm = do
+    length_perm <- genSmallNat 3 10
+    init_perm <- genList length_perm
+    pure init_perm
+
+main :: IO ()
+main = do
+    putStrLn "1. Testing deran generator validity..."
+    quickCheck prop_deran_valid
+    
+    putStrLn "2. Testing symmetry..."
+    quickCheck prop_derangement_symmetric
+
+    quickCheck prop_derangement_symmetric_manual
+
+    putStrLn "3. Testing no fixed points implication..."
+    quickCheck prop_derangement_no_fixed_points
+    quickCheck prop_derangement_no_fixed_points_manual
+>>>>>>> main
