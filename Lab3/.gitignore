@@ -1,0 +1,11 @@
+# Haskell compiled files
+*.hi
+*.o
+
+# Lab Executables
+Lab3/Exercise1/Exercise1
+Lab3/Exercise2/Exercise2
+Lab3/Exercise3/Exercise3
+Lab3/Exercise4/Exercise4
+Lab3/Exercise5/Exercise5
+Lab3/Exercise6/Exercise6
