@@ -1,0 +1,14 @@
+The addElements mutator tests the prop_tenElements property of the multiplication table.
+Similaryly, removeElements also tests this same property, by changing the number of elements in the list.
+anyList tests that list should keep their linearity and modular homogenaeity.
+The addElements and anyList have the weakness that the original correct list can result from the mutant. 
+In the first case, if both generated lists are empty lists. 
+For the other, if the random lists happens to be a valid list.
+When the mutant is the same as the original output list, this mutant will always survive in a correct version of the program.
+This is normal behaviour, as there is always a small fraction (~9% on average) of mutants that don't affect the expected behaviour
+of the function, but should be avoided where possible as it is a false positive.
+
+The mutators currently do not cover alteration of the elements in the list, maintaning the type.
+They also don't cover changing of types, as well as permutations.
+
+
