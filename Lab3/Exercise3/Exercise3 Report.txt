@@ -1,0 +1,24 @@
+Time spent: ~60 minutes
+
+In this exercise we implemented a function that finds a minimal property subset. The
+resulting list is a subset of a larger set that fulfills a specific property but any
+subset of that list fails the same property. In other words it is the smallest set 
+of elements that meets the property.
+
+The implementation uses internal helper functions.
+The first function, properSubsetOf, determines if a specific list exists within a
+different list (is a subset of it). It verifies that the two lists differ and that every item in the first
+list exists in the second list. Since the program cannot compare logic functions
+directly, we compare lists of numerical positions to find minimal subsets.
+The second function, subsetSatisfies, evaluates every input from zero to the value of
+testCount minus one. It provides the input to the code under test and evaluates every
+item in the candidate list against the produced output. We use QuickCheck to check each
+Property value. The maxSuccess value is 1 because each property exists
+for one defined input and output. The results are joined with the "and" operator.
+A candidate list fulfills the requirement only when every property succeeds for every
+tested input.
+
+The function minimalPropertySubsets creates every list of properties that contains at
+least one item - using subsequences. For each possible list, the function evaluateSubset
+triggers subsetSatisfies to find if all properties succeed for the selected inputs. We
+removed the empty list because it lacks the properties required to kill a mutant in testing.
