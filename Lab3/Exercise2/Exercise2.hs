@@ -4,11 +4,16 @@ import MultiplicationTable
 import Mutation
 import Test.QuickCheck
 
+-- Counts how many generated mutants survive all supplied properties.
+-- A mutant survives if it is different from the original output and every property
+-- passes for that mutant at the same input value.
 countSurvivors :: Integer -> [([Integer] -> Integer -> Property)] -> (Integer -> [Integer]) -> IO Integer
 countSurvivors mutantCount properties functionUnderTest =
 	fromIntegral . length . filter id <$>
 		sequenceA (replicate (fromIntegral (max 0 mutantCount)) generateAndCheckMutant)
 	where
+		-- Generate one random input, mutate the original output, and
+		-- see whether the mutant survives all properties.
 		generateAndCheckMutant =
 			generate (arbitrary :: Gen Integer) >>= \input ->
 				let original = functionUnderTest input
@@ -18,12 +23,15 @@ countSurvivors mutantCount properties functionUnderTest =
 							(\propertyUnderTest -> quickCheckWithResult (stdArgs { maxSuccess = 1, chatty = False }) (propertyUnderTest mutant input))
 							properties
 
+		-- Mutate until the mutant differs from the original
 		generateDifferentMutant original =
 			generate (elements mutators) >>= \mutator ->
 				generate (mutator original) >>= \mutant ->
 					if mutant == original
 						then generateDifferentMutant original
 						else pure mutant
+
+
 
 multiplicationTableProperties :: [([Integer] -> Integer -> Property)]
 multiplicationTableProperties =
