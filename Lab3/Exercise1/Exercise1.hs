@@ -15,9 +15,9 @@ changeElements xs = do
     index <- choose (0, (length xs) - 1)
     return $ take index xs ++ [num] ++ drop (index + 1) xs
 
--- Changes type
-changeType :: [Integer] -> Gen [String]
-changeType xs = pure (map show xs)
+add1Elements :: [Integer] -> Gen [Integer]
+add1elements xs = do
+    return $ [x+1 | x<-xs]
 
 permuteElements :: [Integer] -> Gen [Integer]
 permuteElements xs = shuffle xs

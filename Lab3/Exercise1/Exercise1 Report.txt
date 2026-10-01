@@ -9,6 +9,6 @@ This is normal behaviour, as there is always a small fraction (~9% on average) o
 of the function, but should be avoided where possible as it is a false positive.
 
 The mutators currently do not cover alteration of the elements in the list, maintaning the type.
-They also don't cover changing of types, as well as permutations.
+They also don't cover permutations.
 
 
