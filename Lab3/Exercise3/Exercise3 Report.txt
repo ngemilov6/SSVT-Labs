@@ -1,0 +1,4 @@
+For small sample size (4000) there are multiple smallest subsets ({1,n} for all n = 2,3,4,5)
+while for 1'000'000 (taking ~10 seconds to run), the smallest subset is consistently onlu {1,4}.
+This means that for the other ones, there is sometimes just no counter example generated if the samplesize
+is too small. Even for {1,4} we cannot be certain.
