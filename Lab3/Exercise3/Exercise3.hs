@@ -5,6 +5,8 @@ import MultiplicationTable
 import Exercise2 hiding (main)
 import Test.QuickCheck
 
+-- run with: runghc --ghc-arg=-i../:../Exercise2 Exercise3.hs +RTS -M512M -RTS
+
 -- A minimal property subset is a subset that satisfies the property under test,
 -- and no proper subset of it satisfies the same property.
 minimalPropertySubsets :: Integer -> [([Integer] -> Integer -> Property)] -> (Integer -> [Integer]) -> IO [[([Integer] -> Integer -> Property)]]
