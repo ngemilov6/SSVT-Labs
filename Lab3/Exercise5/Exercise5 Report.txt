@@ -1,0 +1,30 @@
+Exercise 5
+Time spent: 45 minutes
+
+Design Report:
+The current implementation calculates property conjectures as a pure functional 
+operation mapping property identifiers to lists of the mutants they kill. The 
+equivalentProperties function groups properties that kill the exact same set of 
+mutants, identifying redundancies. The subsumedProperties function identifies 
+cases where the mutants killed by one property form a strict subset of the mutants 
+killed by another, revealing which properties are strictly stronger. This isolates 
+the theoretical calculation from the test execution environment.
+
+Alternative Implementation Analysis:
+The alternative implementation attempted to evaluate conjectures by running the 
+properties against a sample of normal inputs applied to the original, unmutated 
+function under test. It evaluated equivalence by checking if properties returned 
+the same boolean truth values for these standard inputs, and it calculated subsets 
+based on the sets of valid inputs that satisfied each property. It also included 
+an execution block (main) to print these input-based results.
+
+Rationale for Final Selection:
+The functional, mutant-based implementation was chosen for two critical reasons:
+- Correctness: In the context of mutation testing, conjectures (equivalence and 
+subsumption) are defined entirely by the properties' behavior against mutants, 
+not their behavior on valid inputs. The alternative implementation missed the mutants 
+completely, evaluating normal function behavior rather than mutation testing strength.   
+- Separation of Concerns: The chosen implementation remains a concise, purely mathematical 
+function. By stripping out the hardcoded sampling and printing logic, we maintain a modular 
+architecture where the actual mutation testing matrix can be injected later during the 
+final visualization in Exercise 6.

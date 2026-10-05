@@ -1,0 +1,18 @@
+Exercise 1
+Time spent: 45 minutes
+
+Design Report:
+The provided mutators in the Mutation.hs file (addElements, removeElements, anyList) 
+strictly modify the structure and length of the list or completely replace the output. 
+These baseline structural mutators are strong against properties enforcing size constraints, 
+such as verifying the list has exactly ten elements. However, they are weak against properties 
+that verify precise mathematical relationships, as they do not cover subtle value-level 
+modifications where the list structure and length remain perfectly intact. To address this, 
+we implemented a new list of mutators focusing on value and order manipulation. 
+1. changeElement modifies a single, randomly selected element in the list to test whether 
+the property suite detects isolated value errors while the length remains valid. 
+2. shuffleElements randomizes the sequence of the existing elements to test properties that 
+rely on strict ordering, such as checking the linear progression of the multiplication table. 
+3. incrementElements adds 1 to every element to systematically shift the values and test 
+mathematical invariants like the modulo zero property. 
+4. emptyList clears the output to test boundary condition handling. 

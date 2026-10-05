@@ -1,5 +1,4 @@
 module Exercise3 where
-
 import Data.List (subsequences, minimumBy)
 import Data.Function (on)
 
@@ -16,3 +15,4 @@ minimalSubsets props mutants killsFunc =
         minLen = minimum (map length validSubsets)
         
     in filter (\s -> length s == minLen) validSubsets
+
