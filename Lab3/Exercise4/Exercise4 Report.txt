@@ -1,0 +1,27 @@
+Time spent: ~25 minutes
+
+In this exercise we implemented a function that calculates the strength of a property
+set. Strength is defined as the percentage of generated mutants that are killed by the 
+properties (number of mutants killed divided by number of all generated mutants).
+A mutant is killed when at least one property fails for it. A mutant survives when all
+properties pass.
+
+The implementation uses the countSurvivors function from Exercise 2. The function
+strength first counts how many mutants survive when tested against the supplied
+property set. It then subtracts the number of survivors from the total number of
+mutants to calculate how many mutants were killed.
+
+The result is converted to a percentage by dividing the number of killed mutants by
+the total number of mutants and multiplying by 100. The total is converted to a
+Double so that the result can include decimal values instead of being restricted to
+whole-number division.
+
+The function also handles a mutant count of zero. In this case it returns a strength
+of zero instead of dividing by zero. Negative mutant counts are treated as zero by
+using max 0 mutantCount, which keeps the calculation valid for invalid input values.
+
+For testing purposes we use three property sets, expecting 100%, 0%, and strength 
+between 0 and 100 percent. The main function runs each property set against 4000 
+generated mutants. This sample size provides enough results to compare the property 
+sets while keeping the program practical to run. Since the mutants are generated randomly, 
+the exact medium-strength result can vary between executions.
