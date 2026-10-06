@@ -3,7 +3,7 @@ module Exercise6 where
 import Exercise5 (findConjectures, Conjecture(..), prop_tenElements2)
 import MultiplicationTable
 import Mutation
-import Exercise3
+import Exercise3 hiding (main)
 import Exercise2 (countSurvivors)
 import Data.List (intercalate)
 import Test.QuickCheck
