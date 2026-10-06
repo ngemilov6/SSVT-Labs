@@ -12,10 +12,11 @@ import Text.Printf (printf)
 import Control.Monad (forM_)
 
 
-
+--- Helper to convert the properties to a concatenated list of string descriptors
 antecedentsToString :: [Int] -> String
 antecedentsToString antecedents = intercalate ", " (map show antecedents)
 
+--- Function to find and print conjectures based on mutation testing results (Using Exercise 5)
 printConjectures :: Int -> [MProperty] -> (Integer-> [Integer]) -> IO ()
 printConjectures mutantCount properties functionUnderTest = do
     conjectures <-
@@ -32,12 +33,13 @@ printConjectures mutantCount properties functionUnderTest = do
         printConjecture (FollowsFrom target antecedents) =
             putStrLn $ "{" ++ show target ++ "} <= {" ++ antecedentsToString antecedents ++ "}"
 
-
+--- Function to print the kill rates for each property and mutator (Using Exercise 2)
 printKillRates :: Int -> [(String,[MProperty])] -> (Integer-> [Integer]) -> IO ()
 printKillRates mutantCount propertiesSet functionUnderTest = do
     let intMutantCount = fromIntegral mutantCount
     printTableOfResults intMutantCount mutantSets propertiesSet functionUnderTest
 
+--- Function to find and print minimal property subsets that can kill equal numbers of mutants as the full set (Using Exercise 3)
 printMinimalPropertySubsets :: Int -> [(String,[MProperty])] -> (Integer-> [Integer]) -> IO ()
 printMinimalPropertySubsets mutantCount propertiesSet functionUnderTest = do
     minimalSubsets <- minimalPropertySubsets mutantCount [property | (name, [property]) <- propertiesSet] functionUnderTest
@@ -61,12 +63,14 @@ printMinimalPropertySubsets mutantCount propertiesSet functionUnderTest = do
     putStrLn "Number of properties in each minimal subset:"
     print (map length minimalSubsets)
 
+--- Call all report generating functions
 createReport :: Int-> [(String,[MProperty])] -> (Integer-> [Integer]) -> IO ()
 createReport mutantCount properties functionUnderTest = do
     printKillRates mutantCount properties functionUnderTest
     printConjectures mutantCount [property | (name, [property]) <- properties] functionUnderTest
     printMinimalPropertySubsets mutantCount (drop 1 properties) functionUnderTest
 
+--- Helper function for formatting kill result display in the table
 formatKillResult :: Integer -> Integer -> String
 formatKillResult total survivors =
     let killed = total - survivors
@@ -75,10 +79,12 @@ formatKillResult total survivors =
     in show killed ++ "/" ++ show total ++
        " (" ++ printf "%.1f" percentage ++ "%)"
 
+--- Helper function to add padding for table layout
 padRight :: Int -> String -> String
 padRight width text =
     text ++ replicate (width - length text) ' '
 
+--- Function to render a single string with proper alignment and separators
 renderTable :: [[String]] -> String
 renderTable rows =
     let columnWidths = map (maximum . map length) (transpose rows)
@@ -91,13 +97,14 @@ renderTable rows =
             []       -> []
             header:xs -> renderRow header : separator : map renderRow xs
 
+--- Initial set of mutants
 mutantSets =
     [ ("All mutators", mutators)
     , ("M1: anyList", [anyList])
     , ("M2: removeElements", [removeElements])
     , ("M3: addElements", [addElements])]
 
-
+--- Collect all information for the table from running the mutation testing on all combinations of properties and mutants
 printTableOfResults :: Integer -> [(String, [[Integer] -> Gen [Integer]])] -> [(String, [([Integer] -> Integer -> Bool)])] -> (Integer -> [Integer]) -> IO ()
 printTableOfResults numberOfMutants mutatorsSet propertiesSet functionUnderTest = do
     results <- mapM
