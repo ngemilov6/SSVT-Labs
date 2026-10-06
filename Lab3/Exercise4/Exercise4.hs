@@ -12,7 +12,7 @@ import Exercise2 hiding (main)
 -- then count it as killed if any property fails for that mutant
 strength :: Integer -> [([Integer] -> Integer -> Property)] -> (Integer -> [Integer]) -> IO Double
 strength mutantCount properties functionUnderTest = do
-  survivors <- countSurvivors mutantCount properties functionUnderTest
+  survivors <- countSurvivors mutantCount mutators properties functionUnderTest
   let total = fromIntegral (max 0 mutantCount)
       killed = total - fromIntegral survivors
   if total == 0
