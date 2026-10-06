@@ -1,32 +1,22 @@
 Exercise 3
-Time spent: 40 minutes
-
+Time spent: 75min
 Design Report:
-The current implementation calculates the minimal property subsets as a purely functional 
-mathematical operation. The function minimalSubsets takes a list of properties, a list of 
-mutants, and an evaluation function (killsFunc) to compute the result. It generates all 
-possible property combinations using subsequences, identifies which subsets kill the exact 
-same maximum number of mutants as the full suite, and finally isolates the subsets with the 
-minimum length. This perfectly models the theoretical definition of a minimal subset required 
-for mutation testing without introducing unnecessary execution overhead.
-
-Alternative Implementation Analysis:
-During the code merge process, we reviewed an alternative implementation. This alternative 
-embedded QuickCheck IO execution directly into the subset calculation. It utilized a custom helper 
-function (properSubsetOf) alongside a complex list comprehension to manually filter out larger 
-subsets. Most notably, its internal evaluation logic (subsetSatisfies) ran the properties strictly 
-against the original, unmutated output of the function under test, rather than applying them to 
-generated mutants.
-
-Rationale for Final Selection:
-We chose to proceed with the shorter, functional implementation for three primary reasons:
-- Correctness: In mutation testing, a minimal property subset is strictly defined by its ability
-to maintain the maximum mutant kill rate, not just its ability to pass against valid inputs. The 
-alternative implementation did not test against mutants, meaning it missed the core objective of 
-the exercise. 
-- Separation of Concerns: By keeping the calculation as a pure function, we avoid bloating the 
-file with complex IO sequencing. The actual QuickCheck test executions are cleanly delegated to 
-Exercise 6, leading to a much more modular codebase.
-- Simplicity: The chosen solution is significantly more concise because it leverages standard 
-Haskell list operations (grouping by length and using minimum) instead of writing manual recursive 
-subset filters and custom IO runner configurations.
+The current implementation identifies the smallest subsets of multiplication-table properties that kill exactly the same generated mutants as the complete property set. 
+A property subset is considered effective when, for every generated mutant, the subset kills the mutant if and only if at least one property in the full set kills it.
+generateMutationResults produces the Boolean outcomes of all properties for one non-equivalent mutant. 
+It randomly selects a mutator and input value, applies the mutation process, and regenerates the result when the mutation is equivalent. 
+This ensures that the subsequent analysis only considers mutants for which property outcomes are available.
+killsMutant determines whether a selected subset kills a mutant. A mutant is killed when at least one selected property returns False. 
+fullSetKillsMutant applies the same criterion to the complete property set. 
+In minimalPropertySubsets, all subsequences of the property indices are evaluated against every generated mutation result. 
+Subsets whose kill behaviour matches that of the full set are retained as effective subsets.
+The implementation calculates both inclusion-minimal and smallest-cardinality candidates. 
+strictSubsetOf and minimalIndexSubsets identify subsets for which no strictly smaller effective subset exists. 
+However, the returned result is smallestIndexSubsets: all effective subsets with the minimum number of properties. 
+This means the final output reports the globally smallest property subsets, rather than every inclusion-minimal subset.
+The main function applies this analysis to the multiplication-table properties, maps property indices to readable names, and prints the number, contents, and sizes of the returned subsets.
+A crucial insight from this exercise is the difference that the number of mutants has on the outcome.
+For a small sample size of 4000 mutants, there are multiple smallest subsets ({1,n} for all n=2,3,4,5) while for 1'000'000 (which already takes ~10 seconds to run), 
+the smallest subset is consistently only {1,4}. This means that for the other ones, there is sometimes no counter example generated if the sample size is too small.
+That being said, even for {1,4}, from this analysis alone, we cannot be certain that it is a proper minimal subset of properties, which may lead to a 3-property minimal subset instead,
+if a counter example for {1,4} is found.
