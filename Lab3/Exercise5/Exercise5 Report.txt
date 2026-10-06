@@ -1,30 +1,48 @@
 Exercise 5
-Time spent: 45 minutes
-
+Time spent: 90min
 Design Report:
-The current implementation calculates property conjectures as a pure functional 
-operation mapping property identifiers to lists of the mutants they kill. The 
-equivalentProperties function groups properties that kill the exact same set of 
-mutants, identifying redundancies. The subsumedProperties function identifies 
-cases where the mutants killed by one property form a strict subset of the mutants 
-killed by another, revealing which properties are strictly stronger. This isolates 
-the theoretical calculation from the test execution environment.
+The implementation discovers property conjectures by evaluating all supplied properties against a generated collection of mutants. 
+The Conjecture data type represents two kinds of relationship: Equivalent p1 p2 indicates that two properties have identical mutation-testing results, 
+while FollowsFrom target antecedents indicates that the listed antecedent properties jointly imply the target property.
+The findConjectures function is responsible for collecting mutation results and deriving the conjectures. 
+It generates one result row per mutant using generateMutationResults. 
+Each row contains a Boolean value for every property, representing its result for that mutant. 
+The implementation then compares these rows to identify relationships between property indices.
+equivalentProperties checks whether two properties always produce the same Boolean result across all generated mutants. 
+If so, the properties kill and survive the same mutants and are reported as equivalent.
+impliedBy checks whether a set of antecedent properties implies a target property. 
+For every mutant, if all antecedents hold, then the target must also hold. minimalImplicationSets considers all 
+subsets of the other properties and retains only implication sets that do not have a strict subset 
+which also implies the target. This ensures that only minimal antecedent sets are reported.
+We also add prop_tenElements2, which is intentionally identical to the first ten-elements property.
+After adding the additional property, we adjusted the implication condition to have at least 2 antecedents.
+Otherwise 1 == 2 would also appear as 1 => 2 and 2 => 1, which is unwanted.
+We also see for this Exercise that the conjectures generated are of course closesly related to the minimal subset of properties.
+We see that as we increase the number of mutants the output significantly reduces. Here are two example outputs:
 
-Alternative Implementation Analysis:
-The alternative implementation attempted to evaluate conjectures by running the 
-properties against a sample of normal inputs applied to the original, unmutated 
-function under test. It evaluated equivalence by checking if properties returned 
-the same boolean truth values for these standard inputs, and it calculated subsets 
-based on the sets of valid inputs that satisfied each property. It also included 
-an execution block (main) to print these input-based results.
+For 4000 mutants we get:
+FollowsFrom 2 [1,3]
+FollowsFrom 2 [1,4]
+FollowsFrom 2 [3,4]
+FollowsFrom 2 [3,5]
+FollowsFrom 3 [1,4]
+FollowsFrom 3 [1,2,5]
+FollowsFrom 4 [1,3]
+FollowsFrom 4 [1,2,5]
+FollowsFrom 4 [3,5]
+FollowsFrom 5 [1,3]
+FollowsFrom 5 [1,4]
+FollowsFrom 5 [2,4]
+FollowsFrom 5 [3,4]
 
-Rationale for Final Selection:
-The functional, mutant-based implementation was chosen for two critical reasons:
-- Correctness: In the context of mutation testing, conjectures (equivalence and 
-subsumption) are defined entirely by the properties' behavior against mutants, 
-not their behavior on valid inputs. The alternative implementation missed the mutants 
-completely, evaluating normal function behavior rather than mutation testing strength.   
-- Separation of Concerns: The chosen implementation remains a concise, purely mathematical 
-function. By stripping out the hardcoded sampling and printing logic, we maintain a modular 
-architecture where the actual mutation testing matrix can be injected later during the 
-final visualization in Exercise 6.
+while for 1000000 mutants we get:
+FollowsFrom 2 [1,4]
+FollowsFrom 3 [1,4]
+FollowsFrom 4 [1,2,3]
+FollowsFrom 5 [1,2,3]
+FollowsFrom 5 [1,4]
+FollowsFrom 5 [2,4]
+FollowsFrom 5 [3,4]
+
+This matches our result from Exercise3, that the conjecture for the smallest subset of properties
+is [1,4].
