@@ -31,11 +31,27 @@ alwaysTrueProperty _ _ = True
 
 main :: IO ()
 main = do
-    -- Check that the survivor counter works as expected with a property that always returns True
-    -- Expected output: 10 survivors
+	-- Check that the survivor counter works as expected with a property that always returns True
+	-- Expected output: 10 survivors
 	forcedSurvivors <- countSurvivors 10 mutators [alwaysTrueProperty] multiplicationTable
 	putStrLn $ "Survivor counter check (expected 10): " ++ show forcedSurvivors
 
 	survivors <- countSurvivors 4000 mutators multiplicationTableProps multiplicationTable
 	putStrLn $ "Surviving mutants: " ++ show survivors
 
+	let props1 = [prop_tenElements]
+	    props2 = [prop_firstElementIsInput]
+	    props3 = [prop_sumIsTriangleNumberTimesInput]
+	    props4 = [prop_linear]
+	    props5 = [prop_moduloIsZero]
+
+	survivors1 <- countSurvivors 4000 mutators props1 multiplicationTable
+	putStrLn $ "Surviving mutants Props1: " ++ show survivors1
+	survivors2 <- countSurvivors 4000 mutators props2 multiplicationTable
+	putStrLn $ "Surviving mutants Props2: " ++ show survivors2
+	survivors3 <- countSurvivors 4000 mutators props3 multiplicationTable
+	putStrLn $ "Surviving mutants Props3: " ++ show survivors3
+	survivors4 <- countSurvivors 4000 mutators props4 multiplicationTable
+	putStrLn $ "Surviving mutants Props4: " ++ show survivors4
+	survivors5 <- countSurvivors 4000 mutators props5 multiplicationTable
+	putStrLn $ "Surviving mutants Props5: " ++ show survivors5
