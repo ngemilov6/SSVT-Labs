@@ -30,10 +30,6 @@ alwaysTrueProperty :: [Integer] -> Integer -> Bool
 alwaysTrueProperty _ _ = True
 
 
----
---- vvv START Visual Output Generated with AI
----
--- A cell such as: "3120/4000 (78.0%)"
 formatKillResult :: Integer -> Integer -> String
 formatKillResult total survivors =
     let killed = total - survivors
@@ -73,7 +69,28 @@ mutantSets =
     , ("M2: removeElements", [removeElements])
     , ("M3: addElements", [addElements])]
 
---- ^^^ END AI generation
+
+printTableOfResults :: Integer -> [(String, [[Integer] -> Gen [Integer]])] -> [(String, [([Integer] -> Integer -> Bool)])] -> (Integer -> [Integer]) -> IO ()
+printTableOfResults numberOfMutants mutatorsSet propertiesSet functionUnderTest = do
+    results <- mapM
+        (\(mutantSetName, selectedMutators) -> do
+            cells <- mapM
+                (\(_, selectedProperties) -> do
+                    survivors <- countSurvivors
+                        numberOfMutants
+                        selectedMutators
+                        selectedProperties
+                        functionUnderTest
+                    pure (formatKillResult numberOfMutants survivors)
+                )
+                propertiesSet
+            pure (mutantSetName : cells)
+        )
+        mutatorsSet
+    let header = "Mutant set" : map fst propertiesSet
+    putStrLn "\nMutation-testing results"
+    putStrLn "Each cell: killed/total (kill percentage)"
+    putStrLn $ renderTable (header : results)
 
 main :: IO ()
 main = do
@@ -104,27 +121,5 @@ main = do
 
     let numberOfMutants = 4000
 
-    results <- mapM
-        (\(mutantSetName, selectedMutators) -> do
-            cells <- mapM
-                (\(_, selectedProperties) -> do
-                    survivors <- countSurvivors
-                        numberOfMutants
-                        selectedMutators
-                        selectedProperties
-                        multiplicationTable
-
-                    pure (formatKillResult numberOfMutants survivors)
-                )
-                propertySets
-
-            pure (mutantSetName : cells)
-        )
-        mutantSets
-
-    let header = "Mutant set" : map fst propertySets
-
-    putStrLn "\nMutation-testing results"
-    putStrLn "Each cell: killed/total (kill percentage)"
-    putStrLn $ renderTable (header : results)
+    printTableOfResults numberOfMutants mutantSets propertySets multiplicationTable
 
