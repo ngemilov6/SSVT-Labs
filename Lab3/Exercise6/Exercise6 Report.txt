@@ -1,0 +1,17 @@
+Exercise 6
+Time spent: 120min
+
+Design Report:
+The implementation produces a complete mutation-testing report for the multiplication-table properties. 
+The createReport function coordinates three separate analyses: 
+- printKillRates generates a table showing the number and percentage of killed mutants for selected property sets and mutators
+- printConjectures uses the Exercise 5 functionality to identify equivalent and subsumed properties based on the mutants they kill
+- printMinimalPropertySubsets uses the Exercise 3 functionality to find minimal subsets of properties that kill the same number of mutants as the complete property set
+The report accepts the number of mutants, labelled property sets, and the function under test as parameters. 
+This makes the reporting logic reusable for other functions and property collections. 
+We pass createReport the multiplication-table properties with given descriptive labels, including the complete property set and each individual property. 
+We also added an additional 6th property, which is identical to the first property, to test whether these would be cought
+by the conjectures created. Indeed, the equivalence between 1 and 6 is always indicated.
+The report is then generated using 100,000 mutants. At this level, there are often two minimal subsets (4, including combinations with 6 and 1).
+This is either (1,3) or (1,4). As outlined in Exercise 3, increasing the number of mutants by a factor of 10 leads to more consistent results with a single subset.
+The mutation-testing results are displayed as an aligned text table.
