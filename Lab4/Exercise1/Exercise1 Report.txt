@@ -1,0 +1,16 @@
+Time spent: ~35 minutes
+
+In this exercise we implemented validateLTS for the IOLTS type in LTS.hs. The
+function checks that the state set is not empty and contains the initial state.
+It also checks that every transition starts and ends in a declared state, and
+that each transition label belongs to the input alphabet, the output alphabet,
+or is tau. The input and output alphabets must be disjoint, and tau must not
+appear in either alphabet.
+
+We added concrete QuickCheck properties for a valid IOLTS and for invalid
+examples. The invalid cases cover an empty state set, a missing initial state,
+an undeclared transition state, an undeclared transition label, overlapping
+input and output alphabets, and tau appearing in either alphabet.
+
+The concrete properties check that the validator accepts a valid example and
+rejects examples that violate each of the listed conditions.
