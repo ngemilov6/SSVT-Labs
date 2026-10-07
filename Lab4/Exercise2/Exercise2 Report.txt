@@ -1,0 +1,4 @@
+Generator generates arbitrary states (non-empty), inputs, and outputs.
+The list of inputs is then reduced to eliminate overlap with output.
+Transitions can either be empty, if there are no labels, and otherwise takes two random states and assigns a random label.
+The initial state is a random element of the set of states.
