@@ -39,7 +39,7 @@ prop_initial_state_in_states :: IOLTS -> Bool
 prop_initial_state_in_states (states, inputs, outputs, transitions, initialState) = initialState `elem` states || not (validateLTS (states, inputs, outputs, transitions, initialState))
 
 exampleIOLTS :: IOLTS
-exampleIOLTS = createIOLTS [(0, "?a", 1), (1, "!x", 2), (0, "?b", 3), (3, "!y", 4)]
+exampleIOLTS = createIOLTS [(0, "?a", 1), (1, "!x", 2), (0, "?b", 3), (3, "!y", 4), (1, tau, 3), (4, tau, 2)]
 
 
 
