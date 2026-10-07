@@ -1,0 +1,18 @@
+1. List of factors that result in invalid IOLTS:
+- uncountable set of states Q (e.g. Real Numbers)
+- Empty set of states Q = {}
+- L_I and/or L_U is uncountable
+- L_I and L_U are not disjoint (there is a in L_I s.t. also a in L_U)
+- Tau is a label in L_I or L_U
+- T is not in Qx(L+t)xQ
+- q0 is not in Q
+
+
+Definition IOLTS
+- Q is a countable, non-empty set of states
+- L_I and L_U are countable sets of input labels and output labels, respectively
+- L_I and L_U are disjoint
+- T in Qx(L+t)xQ is a transition relation
+- qo in Q is the initial states
+
+
