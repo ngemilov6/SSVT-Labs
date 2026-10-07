@@ -2,6 +2,7 @@ module Exercise1 where
 
 import LTS
 import Data.List (intersect)
+import Test.QuickCheck
 
 
 prop_non_empty_Q :: IOLTS -> Bool
@@ -24,8 +25,24 @@ validateLTS iolts =
     prop_initial_state iolts
 
 
+--- Properties to test validateLTS
+prop_test_empty_states :: IOLTS -> Bool
+prop_test_empty_states (states, inputs, outputs, transitions, initialState) = null states || validateLTS (states, inputs, outputs, transitions, initialState)
+
+prop_intersect_labels :: IOLTS -> Bool
+prop_intersect_labels (states, inputs, outputs, transitions, initialState) = null (intersect inputs outputs) || not (validateLTS (states, inputs, outputs, transitions, initialState))
+
+prop_tau_in_labels :: IOLTS -> Bool
+prop_tau_in_labels (states, inputs, outputs, transitions, initialState) = not (any (\(_, l, _) -> l == tau) transitions) || not (validateLTS (states, inputs, outputs, transitions, initialState))
+
+prop_initial_state_in_states :: IOLTS -> Bool
+prop_initial_state_in_states (states, inputs, outputs, transitions, initialState) = initialState `elem` states || not (validateLTS (states, inputs, outputs, transitions, initialState))
+
 exampleIOLTS :: IOLTS
 exampleIOLTS = createIOLTS [(0, "?a", 1), (1, "!x", 2), (0, "?b", 3), (3, "!y", 4)]
+
+
+
 {-
 type State = Integer
 type Label = String
