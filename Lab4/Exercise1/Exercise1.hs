@@ -1,13 +1,11 @@
 module Exercise1 where
 
 import LTS
+import Data.List (intersect)
 
 
-prop_countable_non_empty_Q :: IOLTS -> Bool
-prop_countable_non_empty_Q (states, inputs, outputs, transitions, initialState) = length states <= length [0..] && not (null states)
-
-prop_countable_labels :: IOLTS -> Bool
-prop_countable_labels (states, inputs, outputs, transitions, initialState) = length inputs <= length [0..] && length outputs <= length [0..]
+prop_non_empty_Q :: IOLTS -> Bool
+prop_non_empty_Q (states, inputs, outputs, transitions, initialState) = not (null states)
 
 prop_disjoint_labels :: IOLTS -> Bool
 prop_disjoint_labels (states, inputs, outputs, transitions, initialState) = null (intersect inputs outputs)
@@ -20,14 +18,24 @@ prop_initial_state (states, inputs, outputs, transitions, initialState) = initia
 
 validateLTS :: IOLTS -> Bool
 validateLTS iolts = 
-    prop_countable_non_empty_Q iolts &&
-    prop_countable_labels iolts &&
+    prop_non_empty_Q iolts &&
     prop_disjoint_labels iolts &&
     prop_T_correctness iolts &&
     prop_initial_state iolts
 
 
+exampleIOLTS :: IOLTS
+exampleIOLTS = createIOLTS [(0, "?a", 1), (1, "!x", 2), (0, "?b", 3), (3, "!y", 4)]
+{-
+type State = Integer
+type Label = String
+type LabeledTransition = (State, Label, State)
+type Trace = [Label]
+type LTS = ([State], [Label], [LabeledTransition], State)
+type IOLTS = ([State], [Label], [Label], [LabeledTransition], State)
+-}
 
 main :: IO ()
 main = do
     putStrLn "Exercise 1"
+    print $ validateLTS exampleIOLTS

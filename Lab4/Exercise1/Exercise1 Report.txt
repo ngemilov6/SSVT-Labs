@@ -7,6 +7,8 @@
 - T is not in Qx(L+t)xQ
 - q0 is not in Q
 
+Countability of Q and L_I and L_U are given by the implemnetation, that lists in Haskell are countable by definition.
+
 
 Definition IOLTS
 - Q is a countable, non-empty set of states
