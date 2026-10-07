@@ -1,0 +1,18 @@
+Time spent: ~20 minutes
+
+In this exercise we implemented ltsGen, a QuickCheck generator for valid
+IOLTS values. It creates between one and five states, uses state 0 as the
+initial state, and generates up to three input labels and three output labels.
+It then creates up to ten transitions using those states and labels, with tau
+also available as a transition label.
+
+The generated input and output labels are distinct, tau is excluded from both
+alphabets, and every transition uses a declared state. These constraints mean
+that generated systems satisfy the validity rules checked by validateLTS.
+
+The property prop_ltsGenProducesValidIOLTS checks generated values with
+validateLTS. The main function also runs the concrete properties from Exercise1.
+All nine properties passed 100 QuickCheck tests each. It should be mentioned that
+this implementation uses small test cases (up to 5 states from the generator), as
+generating and testing large LTS trees would be very computationally expensive, thus
+the tests are not exhaustive and only account for simple examples.
