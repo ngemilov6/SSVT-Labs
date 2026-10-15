@@ -28,6 +28,7 @@ isQuiscent (states, inputs, outputs, transitions, initial) state =
     null [t | t@(s,o,_) <- transitions, s== state, (o == tau || o `elem` outputs)]
 
 
+-- Swtih to lazyness use main to take 10-20
 nextStep :: Int -> IOLTS -> [(State, Trace)] -> [(State, Trace)] -> [(State, Trace)]
 nextStep maxLen iolts current seen
     | null current = seen

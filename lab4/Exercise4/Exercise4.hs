@@ -6,6 +6,8 @@ import LTS
 import Test.QuickCheck
 import Exercise1
 
+
+-- DO I use/have tau closure?
 after :: IOLTS -> Trace -> [State]
 after iolts@(_, _, _, _, initial) trace =
     sort . nub $

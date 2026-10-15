@@ -12,7 +12,7 @@ badTransitionTarget = ([1,2,3], ["coin"], ["coffee"], [(1,"coin",7)], 1)
 badTransitionLabel :: IOLTS
 badTransitionLabel = ([1,2,3], ["coin"], ["coffee"], [(1,"tea",2)], 1)
 
-
+-- Check input enableness, def 7 in paper.
 validateLTS :: IOLTS -> Bool
 validateLTS (states, inputs, outputs, transitions, initial) =
     not (null states) 

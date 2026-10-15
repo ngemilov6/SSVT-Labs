@@ -18,17 +18,6 @@ doorModel = createLTS
     ]
 
 
-reportLTSAgainstSUT :: LTS -> (State -> Label -> (State, Label)) -> IO ()
-reportLTSAgainstSUT lts sut = mapM_ (checkTrace sut) (getTraces lts)
-
-checkTrace :: (State -> Label -> (State, Label)) -> Trace -> IO ()
-checkTrace sut tr = do
-    result <- try (evaluate (testTrace sut tr)) :: IO (Either SomeException Bool)
-    case result of
-        Left e  -> putStrLn ("Crashed" ++ show tr ++ show e)
-        Right _ -> return ()
-
-
 testLTSAgainstSUT :: LTS -> (State -> Label -> (State, Label)) -> Bool
 testLTSAgainstSUT lts sut = all (testTrace sut) (getTraces lts)
 
@@ -47,11 +36,10 @@ catchError x = unsafePerformIO $ do
 {-# NOINLINE catchError #-}
 
 
---Dont use in 
 testFromTrace :: (State -> Label -> (State, Label)) -> Trace -> State -> Bool
 testFromTrace sut [] state = True
 testFromTrace sut [input] state = True
 testFromTrace sut (input : output : rest) state
-    | "!" ++ newOutput == output = testFromTrace sut rest newState
+    | "!" ++ newOutput == output = rest 
     | otherwise = error ("after input " ++ input ++ " expected " ++ output ++ " but got !" ++ newOutput)
     where (newState, newOutput) = sut state (drop 1 input)

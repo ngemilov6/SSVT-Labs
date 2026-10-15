@@ -13,12 +13,12 @@ genTransition states labels = do
     to    <- elements states
     return (from, label, to)
 
+-- Also have a one that only generates valid and invalid ones. Write in report that we validate generator using props from week 1.
 ltsGen :: Gen IOLTS
 ltsGen = do
     n <- choose (1,5)
     k <- choose (1,5)
     let states = [1..n]
-
     let pool = ["a", "b", "c", "d", "e"]
     labels <- sublistOf pool `suchThat` (not . null)
     let inputs = filter (`elem` labels) pool
