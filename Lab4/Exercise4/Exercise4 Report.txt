@@ -1,0 +1,43 @@
+Exercise 4
+Time spent: 100 min
+
+Design Report:
+p after sigma is the set of states that can be reached from the initial state by performing the
+observable trace sigma, with any number of tau steps before and after every visible label.
+after starts with the tau-closure of the initial state and folds a step function over the trace:
+- a visible label moves to all successors with that label, followed by their tau-closure;
+- delta keeps the quiescent states of the current set (the delta self-loop of the suspension automaton),
+  so after also works for straces.
+The result is returned as a set (sorted, no duplicates), so results can be compared with ==.
+after is declared infix (infix 5 `after`) and used as lts `after` trace, like the notation in the paper.
+The helpers tauClosure and isQuiescent come from Exercise 3, so after and straces agree on what
+quiescence and tau-closure mean.
+
+Test Report:
+Approach: we combine three kinds of tests.
+- Unit tests on models from the paper, where the expected state sets can be worked out by hand. They are
+  chosen for the hard cases: a tau step (coffeeModel6), non-determinism (tretmanK3) and delta.
+- Properties from the definition: after must be non-empty for every trace and every strace, and empty
+  for everything else. The PDF asks for both traces and straces. Traces come from the provided traces
+  function (an independent source, so this is not our code checking itself), and straces come from
+  the random walk generator of Exercise 3.
+- Structural properties that every correct after satisfies, whatever the model: compositionality, only
+  existing states, and only quiescent states after delta.
+Random sequences of labels test the negative side: about a third of them are straces and the rest are
+not, so both outcomes of after are covered.
+
+Properties, tested with traces (LTS.hs traces with tau removed) and with straces (Exercise 3):
+- prop_KnownAfter: coffeeModel6 `after` ["coin"] == [2,3] (tau step), coffeeModel6 `after` ["coin","delta"]
+  == [3], tretmanK3 `after` ["but"] == [1,2] (non-determinism), tretmanK1 `after` ["but","liq"] == [2],
+  tretmanK1 `after` ["delta"] == [0], tretmanK1 `after` ["but","delta"] == [], tretmanS4 `after` ["a"] == [1,3].
+- prop_AfterEmptyTrace: after [] is the tau-closure of the initial state and contains it.
+- prop_AfterTracesNonEmpty: after every trace gives a non-empty set.
+- prop_AfterStracesNonEmpty: after every generated strace gives a non-empty set.
+- prop_AfterEmptyIffNotStrace: for random label sequences (34% are straces), after is empty iff the
+  sequence is not an strace.
+- prop_AfterCompositional: after (sigma ++ rho) equals stepping rho from after sigma.
+- prop_AfterSubsetOfStates: after only returns states of the IOLTS.
+- prop_AfterDeltaQuiescent: after a delta only quiescent states remain.
+
+QuickCheck output: all properties +++ OK, passed 100 tests (prop_KnownAfter: passed 1 test;
+prop_AfterEmptyIffNotStrace: 34% is strace).

@@ -1,0 +1,29 @@
+Exercise 6 (Bonus)
+Time spent: 60 min
+
+Design Report:
+The visualization is plain text for the terminal, so it needs no extra packages or tools. The transitions
+are grouped per source state and the labels are aligned in one column, so each line reads as
+"state  label -> target". "->" in front of a state marks the initial state.
+- visualizeLTS :: LTS -> String prints the labels and then every state with its outgoing transitions.
+  States without outgoing transitions are shown too, as "(no outgoing transitions)", so no state is lost.
+- visualizeIOLTS :: IOLTS -> String also prints the inputs and outputs. Its labels are stored without
+  prefix, so the visualizer adds '?' to inputs and '!' to outputs. Quiescent states get a delta
+  self-loop, so the output shows the suspension automaton used for straces in Exercise 3.
+- visualizeRandomLTS generates an IOLTS with ltsGen from Exercise 2 and prints it.
+
+Test Report:
+main visualizes tretmanV (an LTS with a tau transition), coffeeModel6 (an IOLTS with tau and quiescent
+states) and a random IOLTS from ltsGen. We compared the output for coffeeModel6 with the model by hand:
+
+  Inputs: ?coin
+  Outputs: !coffee
+  -> 1  ?coin   -> 2
+        delta   -> 1
+     2  !coffee -> 3
+        tau     -> 3
+     3  delta   -> 3
+
+All transitions are present with the right prefixes, 1 is marked as initial state, and the delta loops
+appear exactly on the quiescent states 1 and 3 (state 2 can do an output and a tau step).
+For tretmanP, the final state 2 is shown as "(no outgoing transitions)".
