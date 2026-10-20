@@ -1,0 +1,37 @@
+Exercise 2
+Time spent: 90 min
+
+Design Report:
+ltsGen :: Gen IOLTS generates valid IOLTS's:
+- The number of states grows with the QuickCheck size (1 to 2 + size/15), states are [0..n-1] and 0 is
+  the initial state (the same convention as createIOLTS).
+- Inputs are a random subset of ["a","b","c"] and outputs a random subset of ["x","y","z"]. The pools are
+  disjoint, so the alphabets never overlap. Labels are stored without '?'/'!', like createIOLTS does.
+- Every state k > 0 gets one incoming transition from a lower state (a spanning tree), so all states are
+  reachable from the initial state. On top of that up to 2n random transitions are added, which creates
+  branching, self-loops, cycles and non-determinism.
+- tau is chosen with weight 1 against 6 for visible labels, so tau occurs but does not dominate.
+Additional generators:
+- invalidLtsGen: a valid IOLTS from ltsGen with one random factor from Exercise 1 injected.
+  All factors are covered, not only one.
+- tauFreeLtsGen: ltsGen without tau transitions.
+- inputEnabledLtsGen: every state accepts every input (an IOTS in Tretmans' terms); missing inputs
+  become self-loops.
+We use forAll with explicit generators instead of an Arbitrary instance, because IOLTS is a type
+synonym for a tuple and already has an (unusable) Arbitrary instance.
+
+Test Report:
+We test the generators and validateLTS together, in both directions:
+- Valid direction: every IOLTS from ltsGen, tauFreeLtsGen and inputEnabledLtsGen must pass validateLTS.
+  With classify we checked that the generated IOLTS's are not trivial: 74% have a cycle or self-loop,
+  51% contain tau and 38% have more than 3 states.
+- Invalid direction: valid inputs alone can not show that validateLTS rejects anything (const True would
+  pass). invalidLtsGen therefore injects exactly ONE factor into an otherwise valid IOLTS, so a missing
+  check can not be hidden by another violation. prop_EveryFactorDetected shows that all seven factors
+  are generated (10-23% each) and rejected.
+- The 10 properties of Exercise 1 run on 100 random IOLTS's each, instead of only the 27 provided models.
+We use forAll with our own generators instead of ==>, because with the default Arbitrary instance
+QuickCheck gave up after 4 tests. To check that the tests can fail, we removed the tau/delta check from
+validateLTS: prop_EveryFactorDetected failed after 1 test, while prop_LtsGenValid still passed.
+Result: all properties +++ OK, passed 100 tests.
+Limitation: random testing finds no counterexamples, but it does not prove correctness.

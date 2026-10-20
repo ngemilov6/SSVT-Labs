@@ -1,0 +1,56 @@
+Exercise 5
+Time spent: 180 min
+
+Design Report:
+Model: doorModel is an LTS built with createLTS, which keeps the '?' (input) and '!' (output) prefixes,
+so inputs and outputs can still be told apart with the LTS type required by the signature
+testLTSAgainstSUT :: LTS -> (State -> Label -> (State, Label)) -> Bool.
+Every call of the SUT is an input followed by an output, so the model has stable states 0 (open),
+2 (closed) and 5 (locked), and intermediate states 1, 3, 4, 6 that wait for the expected output:
+0 -?close-> 1 -!closed-> 2 -?open-> 3 -!opened-> 0, 2 -?lock-> 4 -!locked-> 5 -?unlock-> 6 -!unlocked-> 2.
+The model states are not the internal states of the SUT; the tester keeps both separately.
+
+Reuse of the previous exercises: ltsToIOLTS converts the LTS into an IOLTS (inputs = '?' labels,
+outputs = '!' labels, prefixes removed with makeLabel from LTS.hs). After that:
+- validateLTS (Exercise 1) rejects an invalid model before testing starts;
+- after (Exercise 4), which uses the tau-closure and quiescence of Exercise 3, gives the model states
+  after a trace. The allowed inputs are the inputs i with model `after` (sigma ++ [i]) non-empty, and the
+  allowed outputs are out(model `after` sigma): the outputs o (and delta, if a quiescent state is
+  reached) with model `after` (sigma ++ [o]) non-empty.
+So the tester contains no tau-closure or step function of its own; the check is the ioco definition
+written out with our own after.
+
+Testing: the tester explores all input sequences the model allows, up to 10 inputs. It keeps the SUT
+state (starting at 0) and the trace so far. For every allowed input it calls the SUT and checks (ioco)
+that the output is in out(model `after` (sigma ++ [input])). Only specified inputs are sent to the SUT, as ioco only says something about those.
+Iterative deepening (depth 1, 2, ..., 10) makes sure the reported failure has the shortest trace.
+
+Descriptive errors: the exploration is written once for any monad and used by two runners:
+- testLTSAgainstSUT (pure, required signature) returns True, or throws an error with the trace, the
+  expected outputs and the actual output. A crash inside the SUT can not be caught in pure code and is
+  passed on as is.
+- reportLTSAgainstSUT (IO) also catches crashes of the SUT with try/evaluate and reports after which
+  trace and on which input the SUT crashed. main uses it for all eight doors.
+
+Test Report:
+main tests doorModel against all eight door implementations with reportLTSAgainstSUT, and checks
+testLTSAgainstSUT doorModel doorImpl1 == True (it prints True). Running
+testLTSAgainstSUT doorModel doorImpl2 throws the descriptive ioco error shown below.
+
+Bugs (results of main):
+- doorImpl1: PASS.
+- doorImpl2: the outputs of close and open are swapped.
+  "after trace ?close: expected one of the outputs ["!closed"] but the SUT produced !opened"
+- doorImpl3: unlock answers "unlocked" but stays in internal state 2 (still locked), so the next lock
+  or open crashes. Found after ?close !closed ?lock !locked ?unlock !unlocked on input ?lock.
+- doorImpl4: lock and unlock are swapped: lock on a closed door crashes (after ?close !closed on input
+  ?lock), unlock is accepted on a closed door and answers "locked".
+- doorImpl5: open answers "open" instead of "opened" (after ?close !closed ?open).
+- doorImpl6: after close, open, close, open, close, the next open throws "Door is stuck!".
+  Locking and unlocking resets this counter.
+- doorImpl7: after ?close ?lock ?unlock ?open ?close ?lock, the next unlock throws "Incorrect keycode!".
+- doorImpl8: after ?close ?lock ?unlock and two open/close cycles, the SUT is in internal state 7, where
+  open is not implemented (crash). It also accepts close on a closed door, but ioco can not observe this
+  because that input is not specified in the model.
+How to fix: doorImpl2/4/5 must use the labels of doorImpl1; doorImpl3 must return to state 1 on unlock;
+doorImpl6/7/8 must not keep extra counter states and should behave like the three-state doorImpl1.

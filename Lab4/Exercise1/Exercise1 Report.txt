@@ -1,0 +1,36 @@
+Exercise 1
+Time spent: 70 min
+
+Design Report:
+List of factors that make an IOLTS (Q, L_I, L_U, T, q0) invalid (Tretmans):
+1. Empty state set: Q must be non-empty.
+2. Invalid initial state: q0 is not in Q.
+3. Overlapping alphabets: a label is both an input and an output (L_I and L_U must be disjoint).
+4. Reserved labels in the alphabet: tau (internal action) or delta (quiescence) is declared as input or output.
+5. Dangling transitions: the source or target of a transition is not in Q.
+6. Undeclared labels: a transition uses a label that is not in L_I, L_U or {tau}.
+
+validateLTS checks exactly these six conditions, so it returns True iff none of the factors occurs.
+The components of the tuple are lists that represent sets. Duplicate entries do not change the set
+they represent, so we decided not to treat duplicates as invalid.
+For testing we wrote one mutation function per factor (emptyStates, outsideInitial, overlappingAlphabets,
+tauAsInput, deltaAsOutput, danglingTransition, undeclaredLabel). Each mutation takes a valid IOLTS and
+introduces exactly one factor. freshState and freshLabel construct a state/label that does not occur in
+the IOLTS yet, so the mutation is guaranteed to have the intended effect.
+
+Test Report:
+Properties (all take a valid IOLTS as input; the random generator is in Exercise 2):
+- prop_EmptyStatesInvalid, prop_OutsideInitialInvalid, prop_OverlapInvalid, prop_TauLabelInvalid,
+  prop_DeltaLabelInvalid, prop_DanglingInvalid, prop_UndeclaredLabelInvalid:
+  every single factor on its own makes validateLTS return False.
+- prop_RemoveTransitionValid: removing any transition keeps the IOLTS valid.
+- prop_AddFreshStateValid: adding an unused state keeps the IOLTS valid.
+- prop_RenameStatesValid: renaming the states with an injective function preserves validity.
+- prop_ProvidedModelsValid: all IOLTS's from LTS.hs (coffee, counter and tretman models) are valid.
+The first group checks that validateLTS rejects every factor; the second group checks that it does not
+reject IOLTS's that are still valid. Together they test both directions of the "iff".
+Our first version only had properties of the form "validateLTS lts ==> condition". These restate the
+implementation and can not fail, and with the default Arbitrary instance almost all inputs were
+invalid, so QuickCheck gave up ("Passed only 4 tests; 1000 discarded").
+Main runs every property on the 27 provided models (deterministic, so each runs once).
+Random testing of the same properties is done in Exercise 2.

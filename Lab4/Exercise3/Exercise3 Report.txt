@@ -1,0 +1,54 @@
+Exercise 3
+Time spent: 120 min
+
+Design Report:
+A suspension trace is a trace over L_I u L_U u {delta}, where delta can be observed in quiescent states.
+A state is quiescent if it has no outgoing output and no outgoing tau transition. tau is not observable,
+so it never occurs in a trace, and any number of tau steps may happen between visible actions.
+
+Our first version added delta self-loops to quiescent states and reused traces from LTS.hs. That is
+wrong, because traces treats tau as a normal label:
+- straces coffeeModel6 contained ["coin","tau"], although tau is not observable;
+- ["coin","delta"] was missing: after coin the system can silently move to the quiescent state 3,
+  but that state was only reachable through the visible "tau" label.
+
+The new implementation works on sets of states (subset construction):
+- tauClosure computes all states reachable with tau steps.
+- stepSet takes one observable step from a set: for a visible label, all successors and their
+  tau-closure; for delta, only the quiescent states of the set (the delta self-loop).
+- straces starts from the tau-closure of the initial state and expands level by level (breadth first):
+  for every trace of length n and every label, the successor set is computed; if it is non-empty, the
+  extended trace is an strace. Each strace is produced exactly once, so no nub over an infinite list is
+  needed, and the traces come in order of length.
+The list is infinite as soon as a quiescent state is reachable (delta can be repeated), so it is used
+with takeWhile on the length (stracesUpTo n), which is finite because the list is length ordered.
+isStrace checks membership that way. Divergence (infinite tau cycles) is not treated as quiescence.
+
+Random traces generator: straceGen lts makes a random walk of 0 to 5 steps over the labels enabled in
+the current set (delta included) and stops early if nothing is enabled. ltsWithStraceGen combines it with
+ltsGen. Picking from the first 100 straces would only give very short traces.
+
+Test Report:
+Properties:
+- prop_KnownStraces: concrete examples, e.g. ["coin","delta"] and ["coin","coffee","delta"] are straces of
+  coffeeModel6, ["delta","coffee"] is not, ["a","delta"] is an strace of tretmanS4 (tau to a quiescent
+  state), ["but","delta"] is not an strace of tretmanK1.
+- prop_NoTauInStraces: no strace contains tau.
+- prop_PrefixClosed: every prefix of an strace is an strace.
+- prop_TracesAreStraces: every trace from LTS.hs traces, with tau removed, is an strace.
+- prop_DeltaRemovalPreserves: removing the deltas from an strace gives an strace.
+- prop_DeltaRepeatable: if trace ++ [delta] is an strace, so is trace ++ [delta, delta].
+- prop_DeltaIffQuiescent: delta can follow a trace iff a quiescent state is reached after that trace.
+- prop_GeneratedAreStraces: the generator only produces straces.
+The old implementation fails prop_KnownStraces and prop_NoTauInStraces.
+
+QuickCheck output:
+Known straces of the provided models:                +++ OK, passed 1 test.
+straces never contain tau:                           +++ OK, passed 100 tests.
+straces are prefix closed:                           +++ OK, passed 100 tests.
+Every trace (tau removed) is an strace:              +++ OK, passed 100 tests.
+Removing deltas from an strace gives an strace:      +++ OK, passed 100 tests.
+delta can be repeated:                               +++ OK, passed 100 tests (63% delta possible).
+delta is possible iff a quiescent state is reached:  +++ OK, passed 100 tests.
+The random traces generator only produces straces:   +++ OK, passed 100 tests
+  (trace lengths: 27% 1, 22% 5, 18% 2, 12% 4, 11% 3, 10% 0)
