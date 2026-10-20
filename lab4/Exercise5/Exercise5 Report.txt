@@ -1,0 +1,58 @@
+Exercise 5
+Time spent: 120min
+Design Report:
+doorModel is an IOLTS that specifies the door's correct behavior. Every input (?close, ?open, ?lock, ?unlock)
+leads to an intermediate state, from which exactly one output (!closed, !opened, !locked, !unlocked) leads to the next
+stable state. This way, the model forces each input to produce the correct output. The stable states are
+0 (open), 1 (closed and unlocked) and 2 (closed and locked).
+
+testLTSAgainstSUT takes all traces of the model up to length 16 (getTraces) and checks every trace against the SUT.
+A trace alternates between inputs and outputs, so testFromTrace takes them two at a time: it passes the input
+(without the "?") to the SUT together with the state the SUT returned in the previous step, starting from 0.
+It then compares the output of the SUT (with "!" in front) to the output in the trace. If they match, it continues
+with the rest of the trace and the new state. The states of the SUT are internal and do not need to match the
+states of the model, so we only pass them along and never compare them.
+
+To make the errors descriptive, we distinguish two kinds of failures:
+- Wrong output: the SUT gives a different output than the model, for example: "after input ?close expected !closed but got !opened".
+- SUT error: the SUT throws an error instead of giving an output. The SUT's own message does not say where this happened, 
+  so catchError catches it in testFromTrace, where we can add the input and the SUT's internal state to the message,
+  for example:  "after input ?lock expected !locked but the SUT threw an error in state 2: Invalid command and/or state!".
+
+We test all traces of the model up to length 16 (8 input/output steps). This bound is a choice: it is
+large enough to find all bugs in the given door implementations (doorImpl8 needs 16, with 15 it passes),
+while the number of traces stays small (91). A larger bound finds bugs that need more steps, but the
+number of traces grows exponentially (379 for 24, 1531 for 32). No fixed bound can guarantee finding every
+bug, because the tester does not know how many internal states the SUT has.
+
+Bugs found (output of testLTSAgainstSUT doorModel doorImplN):
+
+doorImpl1: True, correct implementation.
+
+doorImpl2: "after input ?close expected !closed but got !opened"
+The outputs of close and open are swapped.
+
+doorImpl3: "after input ?lock expected !locked but the SUT threw an error in state 2: Invalid command and/or state!"
+After ?unlock, the door stays in state 2 (locked) instead of going back to state 1, so the door can not be locked
+or opened again.
+
+doorImpl4: "after input ?lock expected !locked but the SUT threw an error in state 1: Invalid command and/or state!"
+The lock and unlock commands are swapped: in state 1, "unlock" locks the door, and in state 2, "lock" unlocks it.
+
+doorImpl5: "after input ?open expected !opened but got !open"
+Opening the door gives the wrong output label.
+
+doorImpl6: "after input ?open expected !opened but the SUT threw an error in state 6: Door is stuck!"
+The implementation counts how often the door is opened instead of going back to state 0. After three times
+close/open, the third open throws "Door is stuck!".
+
+doorImpl7: "after input ?unlock expected !unlocked but the SUT threw an error in state 6: Incorrect keycode!"
+After lock, unlock, open, close, and lock again, the door ends up in state 6, where unlock throws
+"Incorrect keycode!". So the door can only be unlocked once.
+
+doorImpl8: "after input ?open expected !opened but the SUT threw an error in state 7: Invalid command and/or state!"
+After close, lock, unlock, and two more times open/close, the door is in state 7, which accepts lock but not open.
+It also accepts close in state 7, which closes an already closed door.
+The extra close in state 7 (which silently locks the door) is not detected by our tester, because we only
+send inputs that the model allows. Following ioco, behaviour on inputs that the model does not specify is
+not tested.
